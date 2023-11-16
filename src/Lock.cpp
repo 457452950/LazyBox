@@ -1,5 +1,3 @@
-#include "Lock.h"
+#include "thread/Lock.h"
 
-namespace lbox{
-
-}
+namespace lbox {}
