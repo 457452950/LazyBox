@@ -4,4 +4,5 @@ project(${LIBRARY_NAME} CXX)
 add_library(${LIBRARY_NAME}
         Lock.cpp
         ThreadPool.cpp
+        MessageQueue.cpp
 )
