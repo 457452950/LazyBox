@@ -3,71 +3,72 @@
 
 namespace lbox {
 
-ThreadPool::ThreadPool(std::size_t thread_count) : thread_count_(thread_count) {
-    for(int i = 0; i < thread_count_; ++i) {
-        this->newThread();
+ThreadPool::ThreadPool() = default;
+
+ThreadPool::~ThreadPool() {
+    for(auto it : workers_) {
+        it->Join();
     }
+
+    this->workers_.clear();
+    this->thread_active_count_ = 0;
 }
 void ThreadPool::Start(std::size_t count) {
-    this->thread_count_ = count;
-    for(int i = 0; i < thread_count_; ++i) {
+    this->thread_active_count_ = count;
+    for(int i = 0; i < thread_active_count_; ++i) {
         this->newThread();
     }
 }
 void ThreadPool::Join() {
-    for(auto &thread : workers_) {
-        thread->Join();
-    }
     this->WakeUpAll();
+    for(auto &it : this->workers_) {
+        it->Join();
+    }
 }
 void ThreadPool::Detach() {
-    for(auto &thread : workers_) {
-        thread->Detach();
-    }
     this->WakeUpAll();
+    for(auto &it : this->workers_) {
+        it->Detach();
+    }
 }
 void ThreadPool::Quit() {
     for(auto &thread : workers_) {
         thread->Quit();
     }
-    this->WakeUpAll();
 }
 void ThreadPool::checkThreadCount() {
     auto count = AllocateThread(this->task_que_.size());
 
-    if(this->thread_count_ == count) {
+    if(this->thread_active_count_ == count) {
         //
         return;
-    } else if(this->thread_count_ < count) {
+    } else if(this->thread_active_count_ < count) {
         //
-        auto add = count - this->thread_count_;
-        assert(add > 0);
+        if(this->workers_.size() < count) {
+            auto add = count - this->workers_.size();
+            assert(add > 0);
 
-        for(int i = 0; i < add; ++i) {
-            this->newThread();
-        }
-    } else {
-        //
-        auto less = this->thread_count_ - count;
-        assert(less < this->thread_count_);
-
-        for(int i = 1; i <= less; ++i) {
-            this->workers_[thread_count_ - i]->Quit();
+            for(int i = 0; i < add; ++i) {
+                this->newThread();
+            }
+            assert(count == this->workers_.size());
         }
     }
+
+    thread_active_count_ = count;
 }
 
-ThreadPool::Worker::Worker(ThreadPool *pool) : pool_(pool) {
+ThreadPool::Worker::Worker(ThreadPool *pool, int index) : thread_index_(index), pool_(pool) {
     assert(pool_);
     this->worker_ = new std::thread(&ThreadPool::Worker::thread_work_handle, this);
 }
 ThreadPool::Worker::~Worker() {
     if(this->worker_) {
-        if(worker_->joinable()) {
-            worker_->join();
-        }
-        delete worker_;
+        delete this->worker_;
         worker_ = nullptr;
+    }
+    if(pool_) {
+        pool_ = nullptr;
     }
 }
 
@@ -77,6 +78,8 @@ void ThreadPool::Worker::thread_work_handle() {
 
     while(active_) {
         //////////
+        assert(this);
+        assert(pool_);
         std::unique_lock uni(pool_->control_mutex_);
 
         while(pool_->task_que_.empty()) {
@@ -89,7 +92,7 @@ void ThreadPool::Worker::thread_work_handle() {
                     return true;
                 }
 
-                return !this->pool_->task_que_.empty();
+                return !this->pool_->task_que_.empty() && (this->thread_index_ < pool_->thread_active_count_);
             });
         }
 
@@ -106,7 +109,6 @@ void ThreadPool::Worker::thread_work_handle() {
         if(task.task)
             task.task();
     }
-
     // thread_end
 }
 void ThreadPool::Worker::Join() {
@@ -126,4 +128,3 @@ void ThreadPool::Worker::Detach() {
 void ThreadPool::Worker::Quit() { this->active_.store(false); }
 
 } // namespace lbox
-  // namespace lbox

@@ -8,6 +8,6 @@
 #define LBOX_LINUX
 #endif
 
-namespace lbox{}
+namespace lbox {}
 
-#endif//LAZYBOX_INCLUDE_BASE_SYSINFO_H_
+#endif // LAZYBOX_INCLUDE_BASE_SYSINFO_H_

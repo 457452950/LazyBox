@@ -1,17 +1,17 @@
-#ifndef LAZYBOX_INCLUDE_THREAD_MEMORY_H_
-#define LAZYBOX_INCLUDE_THREAD_MEMORY_H_
+#pragma once
+#ifndef LAZYBOX_INCLUDE_THREAD_LOCK_H_
+#define LAZYBOX_INCLUDE_THREAD_LOCK_H_
 
 #include "base/Sysinfo.h"
 
-#include <mutex>
 
 #ifdef LBOX_WIN32
 #include <Windows.h>
 #endif
 
 namespace lbox {
-#ifdef LBOX_WIN32
 
+#ifdef LBOX_WIN32
 // 用户态，可重入锁
 class FastLock {
 public:
@@ -39,9 +39,9 @@ public:
 private:
     FastLock &lock_;
 };
-
 #endif
+
 } // namespace lbox
 
 
-#endif // LAZYBOX_INCLUDE_THREAD_MEMORY_H_
+#endif // LAZYBOX_INCLUDE_THREAD_LOCK_H_

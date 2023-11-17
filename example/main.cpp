@@ -1,22 +1,28 @@
 #include <cassert>
-#include "thread/Lock.h"
 #include "thread/ThreadPool.h"
 #include "thread/MessageQueue.h"
+#include "Chrono.h"
 
-int        cur = 1;
-static int sum = 0;
+
+int64_t        cur = 1;
+static int64_t sum = 0;
 
 std::mutex m;
 // lbox::FastLock m;
 
-void producerThread(lbox::MQueue<int> &queue) {
+void producerThread(lbox::MQueue<int64_t> &queue) {
     //    lbox::UniqueLock mm(m);
     std::unique_lock mm(m);
     queue.Push(cur);
     ++cur;
+    if(cur % 100000) {
+
+    } else {
+        printf("%lld\n", cur);
+    }
 }
 
-void consumerThread(lbox::MQueue<int> &queue, int answer) {
+void consumerThread(lbox::MQueue<int64_t> &queue, int64_t answer) {
     while(true) {
         if(queue.Empty())
             continue;
@@ -31,16 +37,28 @@ void consumerThread(lbox::MQueue<int> &queue, int answer) {
     }
 }
 
+class Pool : public lbox::ThreadPool {
+public:
+    std::size_t AllocateThread(std::size_t task_count) override {
+        auto c = std::max<std::size_t>(4, std::min<std::size_t>(40, task_count / 2));
+        //        printf("%zu\n", task_count);
+        return c;
+    }
+};
+
 int main() {
     using namespace std::chrono_literals;
 
-    lbox::ThreadPool  pool;
-    lbox::MQueue<int> queue;
+    Pool                  pool;
+    lbox::MQueue<int64_t> queue;
 
-    const int   times = 30000;
-    std::thread consumer_thr{&consumerThread, std::ref(queue), times * (times + 1) / 2};
+    pool.Start();
 
-    for(int i = 1; i <= times; ++i) {
+    const int64_t times  = 120000;
+    auto          answer = times * (times + 1) / 2;
+    std::thread   consumer_thr{&consumerThread, std::ref(queue), answer};
+
+    for(int64_t i = 1; i <= times; ++i) {
         pool.Push(std::bind(&producerThread, std::ref(queue)));
     }
 
@@ -48,9 +66,10 @@ int main() {
     //    std::this_thread::sleep_for(200ms);
     consumer_thr.join();
 
-    printf("sum %d", sum);
-    assert(sum == times * (times + 1) / 2);
+    printf("sum %lld  %lld", sum, answer);
+    assert(sum == answer);
 
+    lbox::GetTick64();
 
     pool.Quit();
     pool.Join();
