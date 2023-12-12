@@ -54,6 +54,7 @@ int main() {
     lbox::Channel<int64_t> queue;
 
     pool.Start();
+    auto cl = lbox::GetTick64();
 
     const int64_t times  = 120000;
     auto          answer = times * (times + 1) / 2;
@@ -63,14 +64,15 @@ int main() {
         pool.Push(std::bind(&producerThread, std::ref(queue)));
     }
 
+    printf("%lld \n", lbox::GetTick64() - cl);
 
     //    std::this_thread::sleep_for(200ms);
     consumer_thr.join();
 
-    printf("sum %lld  %lld", sum, answer);
+    printf("sum %lld  %lld\n", sum, answer);
     assert(sum == answer);
 
-    lbox::GetTick64();
+    printf("%lld \n", lbox::GetTick64() - cl);
 
     pool.Quit();
     pool.Join();

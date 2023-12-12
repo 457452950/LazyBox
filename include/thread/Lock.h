@@ -37,17 +37,17 @@ private:
     std::atomic_flag flag_;
 };
 
-class UniqueSpinLock {
+template <class T>
+class UniqueLock {
 public:
-    explicit UniqueSpinLock(SpinLock &flag) : flag_(flag) { flag_.Lock(); }
-    ~UniqueSpinLock() { flag_.Unlock(); }
+    explicit UniqueLock(T &lock) : lock_(lock) { lock_.Lock(); }
+    ~UniqueLock() { lock_.Unlock(); }
 
-    // no copy able
-    UniqueSpinLock &operator=(const UniqueSpinLock &) = delete;
-    UniqueSpinLock(const UniqueSpinLock &)            = delete;
+    UniqueLock(const UniqueLock &)            = delete;
+    UniqueLock &operator=(const UniqueLock &) = delete;
 
 private:
-    SpinLock &flag_;
+    T &lock_;
 };
 
 #ifdef LBOX_WIN32
@@ -71,17 +71,6 @@ private:
 using FastLock = SpinLock;
 #endif
 
-class UniqueLock {
-public:
-    explicit UniqueLock(FastLock &lock) : lock_(lock) { lock_.Lock(); }
-    ~UniqueLock() { lock_.Unlock(); }
-
-    UniqueLock(const UniqueLock &)            = delete;
-    UniqueLock &operator=(const UniqueLock &) = delete;
-
-private:
-    FastLock &lock_;
-};
 
 } // namespace lbox
 
