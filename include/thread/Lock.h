@@ -50,6 +50,25 @@ private:
     T &lock_;
 };
 
+
+template <class T>
+concept StdMutexLike = requires {
+    T().lock();
+    T().unlock();
+};
+template <StdMutexLike T>
+class UniqueLock<T> {
+public:
+    explicit UniqueLock(T &lock) : lock_(lock) { lock_.lock(); }
+    ~UniqueLock() { lock_.unlock(); }
+
+    UniqueLock(const UniqueLock &)            = delete;
+    UniqueLock &operator=(const UniqueLock &) = delete;
+
+private:
+    T &lock_;
+};
+
 #ifdef LBOX_WIN32
 // 用户态, 可重入锁, only for win32
 class FastLock {
