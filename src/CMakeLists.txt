@@ -4,5 +4,6 @@ project(${LIBRARY_NAME})
 add_library(${LIBRARY_NAME}
         Lock.cpp
         ThreadPool.cpp
-        MessageQueue.cpp
+        Channel.cpp
+        Actor.cpp
 )

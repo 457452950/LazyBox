@@ -1,6 +1,6 @@
 #include <cassert>
 #include "thread/ThreadPool.h"
-#include "thread/MessageQueue.h"
+#include "thread/Channel.h"
 #include "Chrono.h"
 
 
@@ -10,19 +10,19 @@ static int64_t sum = 0;
 std::mutex m;
 // lbox::FastLock m;
 
-void producerThread(lbox::MQueue<int64_t> &queue) {
+void producerThread(lbox::Channel<int64_t> &queue) {
     //    lbox::UniqueLock mm(m);
     std::unique_lock mm(m);
     queue.Push(cur);
     ++cur;
-    if(cur % 100000) {
-
-    } else {
-        printf("%lld\n", cur);
-    }
+    //    if(cur % 100000) {
+    //
+    //    } else {
+    //        printf("%lld\n", cur);
+    //    }
 }
 
-void consumerThread(lbox::MQueue<int64_t> &queue, int64_t answer) {
+void consumerThread(lbox::Channel<int64_t> &queue, int64_t answer) {
     while(true) {
         if(queue.Empty())
             continue;
@@ -40,6 +40,7 @@ void consumerThread(lbox::MQueue<int64_t> &queue, int64_t answer) {
 class Pool : public lbox::ThreadPool {
 public:
     std::size_t AllocateThread(std::size_t task_count) override {
+        return 8;
         auto c = std::max<std::size_t>(4, std::min<std::size_t>(40, task_count / 2));
         //        printf("%zu\n", task_count);
         return c;
@@ -49,8 +50,8 @@ public:
 int main() {
     using namespace std::chrono_literals;
 
-    Pool                  pool;
-    lbox::MQueue<int64_t> queue;
+    Pool                   pool;
+    lbox::Channel<int64_t> queue;
 
     pool.Start();
 
