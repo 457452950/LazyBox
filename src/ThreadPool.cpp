@@ -1,4 +1,4 @@
-#include "thread/ThreadPool.h"
+#include "thread/ThreadPool.hpp"
 #include <cassert>
 
 namespace lbox {

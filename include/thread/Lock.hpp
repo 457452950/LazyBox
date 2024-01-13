@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LAZYBOX_INCLUDE_THREAD_LOCK_H_
-#define LAZYBOX_INCLUDE_THREAD_LOCK_H_
+#ifndef LAZYBOX_INCLUDE_THREAD_LOCK_HPP_
+#define LAZYBOX_INCLUDE_THREAD_LOCK_HPP_
 
 #include <atomic>
 #include <mutex>
@@ -94,4 +94,4 @@ using FastLock = SpinLock;
 } // namespace lbox
 
 
-#endif // LAZYBOX_INCLUDE_THREAD_LOCK_H_
+#endif // LAZYBOX_INCLUDE_THREAD_LOCK_HPP_

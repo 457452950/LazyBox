@@ -1,3 +1,3 @@
-#include "thread/Lock.h"
+#include "thread/Lock.hpp"
 
 namespace lbox {}

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LAZYBOX_I_INCLUDE_TIME_H_
-#define LAZYBOX_I_INCLUDE_TIME_H_
+#ifndef LAZYBOX_INCLUDE_TIME_H_
+#define LAZYBOX_INCLUDE_TIME_H_
 
 #include <chrono>
 
@@ -13,4 +13,4 @@ inline long long GetTick64() {
 
 } // namespace lbox
 
-#endif // LAZYBOX_I_INCLUDE_TIME_H_
+#endif // LAZYBOX_INCLUDE_TIME_H_

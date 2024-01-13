@@ -1,12 +1,12 @@
 #pragma once
-#ifndef LAZYBOX_INCLUDE_THREAD_ACTOR_H_
-#define LAZYBOX_INCLUDE_THREAD_ACTOR_H_
+#ifndef LAZYBOX_INCLUDE_THREAD_ACTOR_HPP_
+#define LAZYBOX_INCLUDE_THREAD_ACTOR_HPP_
 
 #include <memory>
 #include <queue>
 
-#include "Lock.h"
-#include "base/TypeTraits.h"
+#include "Lock.hpp"
+#include "base/TypeTraits.hpp"
 
 namespace lbox {
 /**
@@ -122,4 +122,4 @@ private:
 
 } // namespace lbox
 
-#endif // LAZYBOX_INCLUDE_THREAD_ACTOR_H_
+#endif // LAZYBOX_INCLUDE_THREAD_ACTOR_HPP_

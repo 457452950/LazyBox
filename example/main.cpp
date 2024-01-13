@@ -1,18 +1,18 @@
 #include <cassert>
-#include "thread/ThreadPool.h"
-#include "thread/Channel.h"
+#include "thread/ThreadPool.hpp"
+#include "thread/Channel.hpp"
 #include "Chrono.h"
 
 
 int64_t        cur = 1;
 static int64_t sum = 0;
 
-std::mutex m;
-// lbox::FastLock m;
+// std::mutex m;
+lbox::FastLock m;
 
 void producerThread(lbox::Channel<int64_t> &queue) {
-    //    lbox::UniqueLock mm(m);
-    std::unique_lock mm(m);
+    lbox::UniqueLock mm(m);
+    //    std::unique_lock mm(m);
     queue.Push(cur);
     ++cur;
     //    if(cur % 100000) {
@@ -27,8 +27,8 @@ void consumerThread(lbox::Channel<int64_t> &queue, int64_t answer) {
         if(queue.Empty())
             continue;
 
-        //    lbox::UniqueLock mm(m);
-        std::unique_lock mm(m);
+        lbox::UniqueLock mm(m);
+        //        std::unique_lock mm(m);
         sum += queue.Get();
 
         if(answer == sum) {
@@ -40,7 +40,7 @@ void consumerThread(lbox::Channel<int64_t> &queue, int64_t answer) {
 class Pool : public lbox::ThreadPool {
 public:
     std::size_t AllocateThread(std::size_t task_count) override {
-        return 8;
+        return 6;
         auto c = std::max<std::size_t>(4, std::min<std::size_t>(40, task_count / 2));
         //        printf("%zu\n", task_count);
         return c;

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LAZYBOX_INCLUDE_BASE_TYPETRAITS_H_
-#define LAZYBOX_INCLUDE_BASE_TYPETRAITS_H_
+#ifndef LAZYBOX_INCLUDE_BASE_TYPETRAITS_HPP_
+#define LAZYBOX_INCLUDE_BASE_TYPETRAITS_HPP_
 
 #include <type_traits>
 
@@ -23,4 +23,4 @@ inline constexpr bool is_template_of_v<Target, Target<Args...>> = true;
 
 } // namespace lbox
 
-#endif // LAZYBOX_INCLUDE_BASE_TYPETRAITS_H_
+#endif // LAZYBOX_INCLUDE_BASE_TYPETRAITS_HPP_

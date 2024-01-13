@@ -5,8 +5,8 @@
 #include <memory>
 #include <queue>
 
-#include "Lock.h"
-#include "base/TypeTraits.h"
+#include "Lock.hpp"
+#include "base/TypeTraits.hpp"
 
 namespace lbox {
 

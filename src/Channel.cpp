@@ -1,1 +1,1 @@
-#include "thread/Channel.h"
+#include "thread/Channel.hpp"

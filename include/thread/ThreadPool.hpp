@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LAZYBOX_INCLUDE_THREAD_THREADPOOL_H_
-#define LAZYBOX_INCLUDE_THREAD_THREADPOOL_H_
+#ifndef LAZYBOX_INCLUDE_THREAD_THREADPOOL_HPP_
+#define LAZYBOX_INCLUDE_THREAD_THREADPOOL_HPP_
 
 #include <vector>
 #include <thread>
@@ -8,7 +8,7 @@
 #include <functional>
 #include <condition_variable>
 
-#include "Lock.h"
+#include "Lock.hpp"
 
 namespace lbox {
 
@@ -89,4 +89,4 @@ private:
 
 } // namespace lbox
 
-#endif // LAZYBOX_INCLUDE_THREAD_THREADPOOL_H_
+#endif // LAZYBOX_INCLUDE_THREAD_THREADPOOL_HPP_
