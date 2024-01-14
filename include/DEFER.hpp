@@ -24,7 +24,7 @@ public:
  *      DEFER( [pint]()->void{ delete[] pint; } );          \n
  * }
  */
-#define DEFER(func) auto STR_CONTACT2(__temp_, __LINE__) = std::make_shared<wutils::DeferHelper>(func)
+#define DEFER(func) auto STR_CONTACT2(__temp_, __LINE__) = std::make_shared<lbox::DeferHelper>(func)
 
 } // namespace lbox
 
