@@ -6,6 +6,8 @@ namespace lbox {
 
 class NonCopyAble {
 public:
+    NonCopyAble()                               = default;
+    ~NonCopyAble()                              = default;
     NonCopyAble(const NonCopyAble &)            = delete;
     NonCopyAble &operator=(const NonCopyAble &) = delete;
 };
