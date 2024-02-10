@@ -3,6 +3,8 @@
 #include "thread/Channel.hpp"
 #include "Chrono.h"
 
+#include "Toy/Instance.hpp"
+#include "Toy/DEFER.hpp"
 
 int64_t        cur = 1;
 static int64_t sum = 0;
@@ -47,14 +49,23 @@ public:
     }
 };
 
+class TTT {
+public:
+    TTT(int a, char b) {}
+};
+using T_p = lbox::Instance<TTT>;
+
 int main() {
+    T_p::Init(1, 'a');
+    DEFER([]() { T_p::Destroy(); });
+
     using namespace std::chrono_literals;
 
     Pool                   pool;
     lbox::Channel<int64_t> queue;
 
     pool.Start();
-    auto cl = lbox::GetTick64();
+    auto cl = lbox::GetTickMs64();
 
     const int64_t times  = 120000;
     auto          answer = times * (times + 1) / 2;
@@ -64,7 +75,7 @@ int main() {
         pool.Push(std::bind(&producerThread, std::ref(queue)));
     }
 
-    printf("%lld \n", lbox::GetTick64() - cl);
+    printf("%lld \n", lbox::GetTickMs64() - cl);
 
     //    std::this_thread::sleep_for(200ms);
     consumer_thr.join();
@@ -72,7 +83,7 @@ int main() {
     printf("sum %lld  %lld\n", sum, answer);
     assert(sum == answer);
 
-    printf("%lld \n", lbox::GetTick64() - cl);
+    printf("%lld \n", lbox::GetTickMs64() - cl);
 
     pool.Quit();
     pool.Join();
