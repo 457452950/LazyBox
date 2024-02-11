@@ -8,24 +8,21 @@
 
 #include "base/Sysinfo.h"
 
-
 #ifdef LBOX_WIN32
 #include <Windows.h>
 #endif
+
+#include "Toy/NonCopyAble.hpp"
 
 namespace lbox {
 
 /**
  * 自旋锁
  */
-class SpinLock final {
+class SpinLock final : public NonCopyAble {
 public:
     SpinLock()  = default;
     ~SpinLock() = default;
-
-    // no copy able
-    SpinLock &operator=(const SpinLock &) = delete;
-    SpinLock(const SpinLock &)            = delete;
 
     void Lock() {
         while(flag_.test_and_set()) {
@@ -38,13 +35,10 @@ private:
 };
 
 template <class T>
-class UniqueLock {
+class UniqueLock : public NonCopyAble {
 public:
     explicit UniqueLock(T &lock) : lock_(lock) { lock_.Lock(); }
     ~UniqueLock() { lock_.Unlock(); }
-
-    UniqueLock(const UniqueLock &)            = delete;
-    UniqueLock &operator=(const UniqueLock &) = delete;
 
 private:
     T &lock_;
@@ -57,13 +51,10 @@ concept StdMutexLike = requires {
     T().unlock();
 };
 template <StdMutexLike T>
-class UniqueLock<T> {
+class UniqueLock<T> : public NonCopyAble {
 public:
     explicit UniqueLock(T &lock) : lock_(lock) { lock_.lock(); }
     ~UniqueLock() { lock_.unlock(); }
-
-    UniqueLock(const UniqueLock &)            = delete;
-    UniqueLock &operator=(const UniqueLock &) = delete;
 
 private:
     T &lock_;
@@ -71,13 +62,10 @@ private:
 
 #ifdef LBOX_WIN32
 // 用户态, 可重入锁, only for win32
-class FastLock {
+class FastLock : public NonCopyAble {
 public:
     FastLock() { InitializeCriticalSection(&cs_); }
     ~FastLock() { DeleteCriticalSection(&cs_); }
-
-    FastLock(const FastLock &)            = delete;
-    FastLock &operator=(const FastLock &) = delete;
 
     void Lock() { EnterCriticalSection(&cs_); }
     void Unlock() { LeaveCriticalSection(&cs_); }

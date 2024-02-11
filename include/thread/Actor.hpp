@@ -9,12 +9,23 @@
 #include "base/TypeTraits.hpp"
 
 namespace lbox {
+
+/**
+ * <br>三种Actor模式的基类</br>
+ *
+ * Actor类，当无存储数据时，当存储类型为指针时，将返回nullptr
+ *                        当存储类型为普通数据时，将抛出异常
+ *
+ * BActor类：当无存储数据时，将返回类型的默认构造。
+ *
+ */
+
 /**
  * Actor模型
  * @tparam T
  */
 template <class T>
-class Actor {
+class Actor : public NonCopyAble {
     using value_type = T;
 
 public:
@@ -42,7 +53,7 @@ private:
 
 template <class T>
     requires(std::is_pointer_v<T> || is_template_of_v<std::shared_ptr, T>)
-class Actor<T> {
+class Actor<T> : public NonCopyAble {
     using value_type = T;
 
 public:
@@ -59,7 +70,7 @@ protected:
         return msg_que_.size();
     }
 
-    value_type Get() {
+    value_type Get() noexcept(true) {
         UniqueLock unl(lock_);
         if(this->msg_que_.empty()) {
             return nullptr;
@@ -77,7 +88,7 @@ private:
 
 
 template <class T>
-class BActor {
+class BActor : public NonCopyAble {
     using value_type = T;
 
 public:

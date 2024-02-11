@@ -7,6 +7,10 @@
 
 namespace lbox {
 
+/**
+ * 单例模板，懒汉式
+ * @tparam T 单例类
+ */
 template <class T>
 class Instance final : public NonCopyAble {
 public:

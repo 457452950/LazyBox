@@ -12,13 +12,9 @@ namespace lbox {
 
 
 template <class T>
-class Channel {
+class Channel : public NonCopyAble {
 public:
     using value_type = T;
-
-    // no copy able
-    Channel &operator=(const Channel &) = delete;
-    Channel(const Channel &)            = delete;
 
 public:
     Channel() { static_assert(!std::is_reference_v<T> && !std::is_array_v<T> && !std::is_const_v<T>); }
@@ -61,13 +57,9 @@ private:
 
 template <class T>
     requires(std::is_pointer_v<T> || is_template_of_v<std::shared_ptr, T>)
-class Channel<T> {
+class Channel<T> : public NonCopyAble {
 public:
     using value_type = T;
-
-    // no copy able
-    Channel &operator=(const Channel &) = delete;
-    Channel(const Channel &)            = delete;
 
 public:
     Channel() { static_assert(!std::is_reference_v<T> && !std::is_array_v<T> && !std::is_const_v<T>); }
@@ -112,13 +104,9 @@ private:
 
 // blocked channel
 template <class T>
-class BChannel {
+class BChannel : public NonCopyAble {
 public:
     using value_type = T;
-
-    // no copy able
-    BChannel &operator=(const BChannel &) = delete;
-    BChannel(const BChannel &)            = delete;
 
 public:
     BChannel()  = default;

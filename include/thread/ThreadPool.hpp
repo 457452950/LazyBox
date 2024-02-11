@@ -9,26 +9,22 @@
 #include <condition_variable>
 
 #include "Lock.hpp"
+#include "Toy/NonCopyAble.hpp"
 
 namespace lbox {
 
 static constexpr unsigned int default_thread_count = 4;
 
-class ThreadPool {
+class ThreadPool : public NonCopyAble {
     using task_type = std::function<void()>;
     struct Task {
         task_type task;
     };
 
-    class Worker {
+    class Worker : public NonCopyAble {
     public:
         explicit Worker(ThreadPool *pool, int index);
         virtual ~Worker();
-
-        Worker(const Worker &)                = delete;
-        Worker &operator=(const Worker &)     = delete;
-        Worker(Worker &&other) noexcept       = delete;
-        Worker &operator=(Worker &&) noexcept = delete;
 
         void Join();
         void Detach();
