@@ -22,29 +22,34 @@ public:
 
     template <class U>
     void Push(U &&data) {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
         this->data_que_.push(std::forward<T>(data));
     }
 
     value_type Get() noexcept(false) {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
+
         value_type ret = std::move(this->data_que_.front());
         this->data_que_.pop();
+
         return ret;
     }
 
     std::size_t Size() {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
+
         return this->data_que_.size();
     }
 
     bool Empty() {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
+
         return this->data_que_.empty();
     }
 
     void Clear() {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
+
         while(!this->data_que_.empty())
             this->data_que_.pop();
     }
@@ -67,12 +72,14 @@ public:
 
     template <class U>
     void Push(U &&data) {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
+
         this->data_que_.push(std::forward<T>(data));
     }
 
     value_type Get() {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
+
         if(this->data_que_.empty()) {
             return nullptr;
         }
@@ -82,17 +89,18 @@ public:
     }
 
     std::size_t Size() {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
+
         return this->data_que_.size();
     }
 
     bool Empty() {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
         return this->data_que_.empty();
     }
 
     void Clear() {
-        UniqueLock uni(lock_);
+        std::lock_guard uni{lock_};
         while(!this->data_que_.empty())
             this->data_que_.pop();
     }

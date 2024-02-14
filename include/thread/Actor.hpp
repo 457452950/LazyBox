@@ -32,7 +32,8 @@ public:
     virtual ~Actor() = default;
 
     virtual void Send(value_type m) {
-        UniqueLock unl(lock_);
+        std::lock_guard uni{lock_};
+
         msg_que_.push(m);
     }
 
@@ -40,8 +41,9 @@ protected:
     std::size_t Size() { return msg_que_.size(); }
 
     value_type Get() noexcept(false) {
-        UniqueLock unl(lock_);
-        auto       res = msg_que_.front();
+        std::lock_guard uni{lock_};
+
+        auto res = msg_que_.front();
         msg_que_.pop();
         return res;
     }
@@ -60,18 +62,21 @@ public:
     virtual ~Actor() = default;
 
     virtual void Send(value_type m) {
-        UniqueLock unl(lock_);
+        std::lock_guard uni{lock_};
+
         msg_que_.push(m);
     }
 
 protected:
     std::size_t Size() {
-        UniqueLock unl(lock_);
+        std::lock_guard uni{lock_};
+
         return msg_que_.size();
     }
 
     value_type Get() noexcept(true) {
-        UniqueLock unl(lock_);
+        std::lock_guard uni{lock_};
+        
         if(this->msg_que_.empty()) {
             return nullptr;
         }

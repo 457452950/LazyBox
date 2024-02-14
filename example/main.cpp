@@ -13,7 +13,7 @@ static int64_t sum = 0;
 lbox::FastLock m;
 
 void producerThread(lbox::Channel<int64_t> &queue) {
-    lbox::UniqueLock mm(m);
+    std::lock_guard mm{m};
     //    std::unique_lock mm(m);
     queue.Push(cur);
     ++cur;
@@ -29,7 +29,7 @@ void consumerThread(lbox::Channel<int64_t> &queue, int64_t answer) {
         if(queue.Empty())
             continue;
 
-        lbox::UniqueLock mm(m);
+        std::lock_guard mm{m};
         //        std::unique_lock mm(m);
         sum += queue.Get();
 

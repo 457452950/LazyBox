@@ -22,7 +22,7 @@ public:
     static void Init(Types &&...Args) {
         if(instance_ == nullptr) {
 
-            UniqueLock uni_lock(instance_lock);
+            std::lock_guard uni_lock{instance_lock};
 
             if(instance_ == nullptr) {
                 instance_ = new ValueType(std::forward<Types>(Args)...);
@@ -32,7 +32,7 @@ public:
 
     static ValuePointer GetInstance() { return instance_; }
     static void         Destroy() {
-        UniqueLock uni_lock(instance_lock);
+        std::lock_guard uni_lock{instance_lock};
 
         delete instance_;
         instance_ = nullptr;

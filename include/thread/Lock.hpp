@@ -30,34 +30,11 @@ public:
     }
     void Unlock() { flag_.clear(); }
 
+    void lock() { Lock(); }
+    void unlock() { Unlock(); }
+
 private:
     std::atomic_flag flag_;
-};
-
-template <class T>
-class UniqueLock : public NonCopyAble {
-public:
-    explicit UniqueLock(T &lock) : lock_(lock) { lock_.Lock(); }
-    ~UniqueLock() { lock_.Unlock(); }
-
-private:
-    T &lock_;
-};
-
-
-template <class T>
-concept StdMutexLike = requires {
-    T().lock();
-    T().unlock();
-};
-template <StdMutexLike T>
-class UniqueLock<T> : public NonCopyAble {
-public:
-    explicit UniqueLock(T &lock) : lock_(lock) { lock_.lock(); }
-    ~UniqueLock() { lock_.unlock(); }
-
-private:
-    T &lock_;
 };
 
 #ifdef LBOX_WIN32
@@ -70,10 +47,12 @@ public:
     void Lock() { EnterCriticalSection(&cs_); }
     void Unlock() { LeaveCriticalSection(&cs_); }
 
+    void lock() { Lock(); }
+    void unlock() { Unlock(); }
+
 private:
     CRITICAL_SECTION cs_{};
 };
-
 #elif defined(LBOX_LINUX)
 using FastLock = SpinLock;
 #endif
