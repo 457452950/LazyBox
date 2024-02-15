@@ -53,11 +53,18 @@ class TTT {
 public:
     TTT(int a, char b) {}
 };
-using T_p = lbox::Instance<TTT>;
+using T_p = lbox::lazy::Instance<TTT>;
+class TTTT {
+public:
+    TTTT() {}
+};
+using TT_p = lbox::Instance<TTTT>;
 
 int main() {
     T_p::Init(1, 'a');
     DEFER([]() { T_p::Destroy(); });
+
+    TT_p::GetInstance();
 
     using namespace std::chrono_literals;
 
