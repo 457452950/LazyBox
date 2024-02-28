@@ -1,23 +1,16 @@
-#include "thread/ThreadPool.hpp"
+#include "lazybox/thread/ThreadPool.hpp"
 #include <cassert>
 
 namespace lbox {
 
 ThreadPool::ThreadPool() = default;
 
-ThreadPool::~ThreadPool() {
-    for(auto it : workers_) {
-        it->Join();
-    }
+ThreadPool::~ThreadPool() {}
 
-    this->workers_.clear();
-    this->thread_active_count_ = 0;
-}
 void ThreadPool::Start(std::size_t count) {
     this->thread_active_count_ = count;
-    for(int i = 0; i < thread_active_count_; ++i) {
+    if(this->workers_.empty())
         this->newThread();
-    }
 }
 void ThreadPool::Join() {
     this->WakeUpAll();
@@ -31,18 +24,18 @@ void ThreadPool::Detach() {
         it->Detach();
     }
 }
-void ThreadPool::Quit() {
-    for(auto &thread : workers_) {
-        thread->Quit();
-    }
-}
+void ThreadPool::Quit() { this->active_.store(false, std::memory_order_release); }
 void ThreadPool::checkThreadCount() {
-    auto count = AllocateThread(this->task_que_.size());
+    auto count = AllocateThread(this->task_que_.Size());
 
     if(this->thread_active_count_ == count) {
         //
         return;
-    } else if(this->thread_active_count_ < count) {
+    }
+    std::cout << "count " << count << " " << this->thread_active_count_ << " " << this->workers_.size() << std::endl;
+
+    //
+    if(this->thread_active_count_ < count) {
         //
         if(this->workers_.size() < count) {
             auto add = count - this->workers_.size();
@@ -73,43 +66,45 @@ ThreadPool::Worker::~Worker() {
 }
 
 void ThreadPool::Worker::thread_work_handle() {
-    // thread_start
-    assert(this);
-
-    while(active_) {
-        //////////
-        assert(this);
-        assert(pool_);
+    while(pool_->active_.load(std::memory_order_relaxed)) {
         std::unique_lock uni(pool_->control_mutex_);
 
-        while(pool_->task_que_.empty()) {
-            if(!active_) {
-                break;
-            }
-
+        while(pool_->active_.load(std::memory_order_relaxed) && pool_->task_que_.Empty()) {
             pool_->control_ca_.wait(uni, [this]() {
-                if(!this->active_) {
+                // non-block when not active
+                if(!pool_->active_.load(std::memory_order_relaxed)) {
                     return true;
                 }
 
-                return !this->pool_->task_que_.empty() && (this->thread_index_ < pool_->thread_active_count_);
+                pool_->checkThreadCount();
+
+                // block when thread_index_ >= thread_active_count_
+                if(this->thread_index_ >= pool_->thread_active_count_) {
+                    return false;
+                }
+
+                // block when task queue is empty
+                if(this->pool_->task_que_.Empty()) {
+                    return false;
+                } else {
+                    return true;
+                }
             });
         }
 
-        if(!active_) {
+        if(!pool_->active_.load(std::memory_order_relaxed)) {
             break;
         }
 
-        Task task = pool_->task_que_.front();
-        pool_->task_que_.pop();
+        Task task;
+        pool_->task_que_.Pop(task);
 
         uni.unlock();
-        ///////////
 
-        if(task.task)
-            task.task();
+        task();
     }
     // thread_end
+    //    std::cout << "thread end " << this->thread_index_ << std::endl;
 }
 void ThreadPool::Worker::Join() {
     if(this->worker_) {
@@ -125,6 +120,5 @@ void ThreadPool::Worker::Detach() {
         }
     }
 }
-void ThreadPool::Worker::Quit() { this->active_.store(false); }
 
 } // namespace lbox

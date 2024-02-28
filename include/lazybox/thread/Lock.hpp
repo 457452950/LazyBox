@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LAZYBOX_INCLUDE_THREAD_LOCK_HPP_
 #define LAZYBOX_INCLUDE_THREAD_LOCK_HPP_
 
@@ -6,13 +6,13 @@
 #include <mutex>
 #include <condition_variable>
 
-#include "base/Sysinfo.h"
+#include "lazybox/base/Sysinfo.h"
 
 #ifdef LBOX_WIN32
 #include <Windows.h>
 #endif
 
-#include "Toy/NonCopyAble.hpp"
+#include "lazybox/Toy/NonCopyAble.hpp"
 
 namespace lbox {
 
@@ -25,16 +25,16 @@ public:
     ~SpinLock() = default;
 
     void Lock() {
-        while(flag_.test_and_set()) {
-        }
+        while(flag_.test_and_set(std::memory_order_acquire))
+            ;
     }
-    void Unlock() { flag_.clear(); }
+    void Unlock() { flag_.clear(std::memory_order_release); }
 
     void lock() { Lock(); }
     void unlock() { Unlock(); }
 
 private:
-    std::atomic_flag flag_;
+    std::atomic_flag flag_{};
 };
 
 #ifdef LBOX_WIN32

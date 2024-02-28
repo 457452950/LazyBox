@@ -6,7 +6,7 @@
 
 namespace lbox {
 
-inline auto GetTickMs64() -> decltype(auto) {
+inline auto GetTickMs64() -> int64_t {
     using namespace std::chrono;
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }

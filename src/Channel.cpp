@@ -1,1 +1,1 @@
-#include "thread/Channel.hpp"
+#include "lazybox/thread/Channel.hpp"

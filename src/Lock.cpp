@@ -1,3 +1,3 @@
-#include "thread/Lock.hpp"
+#include "lazybox/thread/Lock.hpp"
 
 namespace lbox {}
