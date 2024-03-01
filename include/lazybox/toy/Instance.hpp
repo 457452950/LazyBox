@@ -2,6 +2,8 @@
 #ifndef LAZYBOX_INCLUDE_TOY_INSTANCE_HPP_
 #define LAZYBOX_INCLUDE_TOY_INSTANCE_HPP_
 
+#include <cassert>
+
 #include "lazybox/thread/Lock.hpp"
 #include "NonCopyAble.hpp"
 
@@ -125,6 +127,9 @@ private:
     ThreadInstance()  = default;
     ~ThreadInstance() = default;
 };
+
+template <class T>
+inline thread_local typename ThreadInstance<T>::ValuePointer ThreadInstance<T>::instance_ = nullptr;
 
 } // namespace lbox
 

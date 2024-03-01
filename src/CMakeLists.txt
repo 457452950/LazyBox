@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.22)
 project(${LIBRARY_NAME})
 
 add_library(${LIBRARY_NAME}
-        Lock.cpp
-        ThreadPool.cpp
-        Channel.cpp
-        Actor.cpp
+        thread/Lock.cpp
+        thread/ThreadPool.cpp
+        thread/Channel.cpp
+        thread/Actor.cpp
+        test/TestEngine.cpp
+        test/TestCase.cpp
 )

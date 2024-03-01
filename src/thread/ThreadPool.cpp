@@ -5,12 +5,16 @@ namespace lbox {
 
 ThreadPool::ThreadPool() = default;
 
-ThreadPool::~ThreadPool() {}
+ThreadPool::~ThreadPool() = default;
 
 void ThreadPool::Start(std::size_t count) {
     this->thread_active_count_ = count;
-    if(this->workers_.empty())
-        this->newThread();
+    {
+        std::lock_guard lock{this->control_mutex_};
+        for(int i = 0; i < count; ++i) {
+            newThread();
+        }
+    }
 }
 void ThreadPool::Join() {
     this->WakeUpAll();
@@ -24,11 +28,11 @@ void ThreadPool::Detach() {
         it->Detach();
     }
 }
-void ThreadPool::Quit() { this->active_.store(false, std::memory_order_release); }
+void ThreadPool::Quit() { this->active_.store(false); }
 void ThreadPool::checkThreadCount() {
-    auto count = AllocateThread(this->task_que_.Size());
+    auto count = SetThreadCount(this->task_que_.Size());
 
-    if(this->thread_active_count_ == count) {
+    if(this->thread_active_count_ == count && this->workers_.size() >= count) {
         //
         return;
     }
@@ -70,7 +74,7 @@ void ThreadPool::Worker::thread_work_handle() {
         std::unique_lock uni(pool_->control_mutex_);
 
         while(pool_->active_.load(std::memory_order_relaxed) && pool_->task_que_.Empty()) {
-            pool_->control_ca_.wait(uni, [this]() {
+            pool_->control_ca_.wait(uni, [this]() -> bool {
                 // non-block when not active
                 if(!pool_->active_.load(std::memory_order_relaxed)) {
                     return true;
@@ -104,7 +108,8 @@ void ThreadPool::Worker::thread_work_handle() {
         task();
     }
     // thread_end
-    //    std::cout << "thread end " << this->thread_index_ << std::endl;
+    std::cout << "thread end " << this->thread_index_ << std::endl;
+    this->pool_->WakeUp();
 }
 void ThreadPool::Worker::Join() {
     if(this->worker_) {

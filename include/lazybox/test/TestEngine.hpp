@@ -1,18 +1,38 @@
-//
-// Created by wang on 2024/2/28.
-//
-
+#pragma once
 #ifndef LAZYBOX_INCLUDE_LAZYBOX_TEST_TESTENGINE_HPP_
 #define LAZYBOX_INCLUDE_LAZYBOX_TEST_TESTENGINE_HPP_
 
-namespace lbox {
-namespace test {
+#include <functional>
+#include <vector>
+#include <exception>
 
-class TestEngine {
+#include "../Chrono.h"
+#include "../toy/Instance.hpp"
 
+namespace lbox::test {
+
+class TestCase;
+
+
+class TestEngineImpl {
+    friend class TestCase;
+
+public:
+    void RunAllTest();
+    ~TestEngineImpl();
+
+protected:
+    void AddCase(TestCase *a_case);
+
+    void Report();
+
+private:
+    using case_list = std::vector<TestCase *>;
+    std::unordered_map<std::string, case_list> name_2_cases_;
 };
 
-} // test
-} // lbox
+using TestEngine = Instance<TestEngineImpl>;
 
-#endif //LAZYBOX_INCLUDE_LAZYBOX_TEST_TESTENGINE_HPP_
+} // namespace lbox::test
+
+#endif // LAZYBOX_INCLUDE_LAZYBOX_TEST_TESTENGINE_HPP_

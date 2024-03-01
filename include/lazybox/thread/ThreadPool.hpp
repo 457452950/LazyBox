@@ -91,7 +91,7 @@ public:
     template <class F>
     void Submit(F &&f) {
         Task task{std::forward<F>(f)};
-        
+
         this->task_que_.Push(std::move(task));
         this->WakeUpAll();
     }
@@ -114,24 +114,26 @@ public:
     }
 
 protected:
-    // return total thread count
-    virtual std::size_t AllocateThread([[maybe_unused]] std::size_t task_count) { return GetThreadCount(); };
+    // return total thread count, lock has been acquired
+    virtual std::size_t SetThreadCount([[maybe_unused]] std::size_t task_count) { return thread_active_count_; };
 
 
     void WakeUpAll() {
         std::atomic_thread_fence(std::memory_order_acquire);
         this->control_ca_.notify_all();
+        std::atomic_thread_fence(std::memory_order_release);
     }
     void WakeUp() {
         std::atomic_thread_fence(std::memory_order_acquire);
         this->control_ca_.notify_one();
+        std::atomic_thread_fence(std::memory_order_release);
     }
 
 private:
     void checkThreadCount();
 
     void newThread() {
-        std::cout << "new thread " << std::this_thread::get_id() << std::endl;
+        std::cout << "new thread, create thread id : " << std::this_thread::get_id() << std::endl;
         this->workers_.push_back(new Worker(this, static_cast<int>(this->workers_.size())));
     }
 
