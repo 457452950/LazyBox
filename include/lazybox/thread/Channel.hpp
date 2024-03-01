@@ -190,9 +190,8 @@ public:
     }
 
     void Close() {
-        active_.store(false, std::memory_order_acquire);
+        active_.store(false, std::memory_order_seq_cst);
         this->WakeUpAll();
-        this->Clear();
     }
 
 protected:
