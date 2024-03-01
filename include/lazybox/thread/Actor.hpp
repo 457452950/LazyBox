@@ -51,7 +51,7 @@ protected:
         return msg_que_.size();
     }
 
-    bool Empty() noexcept(true) {
+    [[nodiscard]] bool Empty() noexcept(true) {
         std::lock_guard uni{lock_};
         return msg_que_.empty();
     }
@@ -61,7 +61,7 @@ protected:
      * @param v
      * @return 返回true时有消息，返回false时无消息
      */
-    bool Get(value_ref v) noexcept(true) {
+    [[nodiscard]] bool Get(value_ref v) noexcept(true) {
         if(Empty()) {
             return false;
         }
@@ -113,7 +113,7 @@ public:
      * @param v 数据
      * @return 返回false时略过此条数据
      */
-    virtual bool SendingMessageFilter(const value_type &v) { return true; }
+    [[nodiscard]] virtual bool SendingMessageFilter(const value_type &v) { return true; }
 
 protected:
     std::size_t Size() {
@@ -121,7 +121,7 @@ protected:
         return msg_que_.size();
     }
 
-    bool Empty() noexcept(true) {
+    [[nodiscard]] bool Empty() noexcept(true) {
         std::lock_guard uni{lock_};
         return msg_que_.empty();
     }
@@ -131,7 +131,7 @@ protected:
      * @return nullptr for empty,
      *         otherwise return the data
      */
-    value_type Get() noexcept(true) {
+    [[nodiscard]] value_type Get() noexcept(true) {
         std::lock_guard uni{lock_};
 
         if(this->msg_que_.empty()) {
@@ -188,7 +188,7 @@ public:
      * @param v 数据
      * @return 返回false时略过此条数据
      */
-    virtual bool SendingMessageFilter(const value_type &v) { return true; }
+    [[nodiscard]] virtual bool SendingMessageFilter(const value_type &v) { return true; }
 
 protected:
     std::size_t Size() noexcept(true) {
@@ -209,7 +209,7 @@ protected:
      * @return false for empty,
      *         true for success
      */
-    bool Get(value_ref v) {
+    [[nodiscard]] bool Get(value_ref v) {
         std::unique_lock un(this->control_mutex_);
 
         if(this->msg_que_.Empty()) {
@@ -240,7 +240,7 @@ protected:
      * @return
      */
     template <class Rep, class Period>
-    bool Get(value_ref v, const std::chrono::duration<Rep, Period> &rel_time) {
+    [[nodiscard]] bool Get(value_ref v, const std::chrono::duration<Rep, Period> &rel_time) {
         std::unique_lock un(this->control_mutex_);
 
         if(this->msg_que_.Empty()) {
@@ -267,7 +267,7 @@ protected:
      * @param v
      * @return 返回true时有消息，返回false时无消息
      */
-    bool TryGet(value_ref v) noexcept(true) {
+    [[nodiscard]] bool TryGet(value_ref v) noexcept(true) {
         //        if(Empty()) {
         //            return false;
         //        }

@@ -7,6 +7,7 @@
 
 #include "Lock.hpp"
 #include "lazybox/base/TypeTraits.hpp"
+#include "lazybox/thread_safe/Queue.hpp"
 
 namespace lbox {
 
@@ -24,45 +25,24 @@ public:
     /**
      * non-blocking
      *
-     * @tparam U
+     * @tparam Uchanne
      * @param data
      */
     template <class U>
     void Push(U &&data) {
-        std::lock_guard uni{lock_};
-        this->data_que_.push(std::forward<U>(data));
+        this->data_que_.Push(std::forward<U>(data));
     }
 
-    bool Get(value_ref v) noexcept(false) {
-        if(Empty()) {
-            return false;
-        }
+    [[nodiscard]] bool Get(value_ref v) noexcept(true) { return this->data_que_.Pop(v); }
 
-        std::lock_guard uni{lock_};
-        v = std::move(this->data_que_.front());
-        this->data_que_.pop();
-        return true;
-    }
+    std::size_t Size() { return this->data_que_.Size(); }
 
-    std::size_t Size() {
-        std::lock_guard uni{lock_};
-        return this->data_que_.size();
-    }
+    [[nodiscard]] bool Empty() { return this->data_que_.Empty(); }
 
-    bool Empty() {
-        std::lock_guard uni{lock_};
-        return this->data_que_.empty();
-    }
-
-    void Clear() {
-        std::lock_guard        uni{lock_};
-        std::queue<value_type> empty;
-        this->data_que_.swap(empty);
-    }
+    void Clear() { this->data_que_.Clear(); }
 
 private:
-    std::queue<value_type> data_que_;
-    FastLock               lock_;
+    thread_safe::Queue<value_type> data_que_;
 };
 
 
@@ -82,7 +62,7 @@ public:
         this->data_que_.push(std::forward<U>(data));
     }
 
-    value_type Get() {
+    [[nodiscard]] value_type Get() {
         if(this->data_que_.empty()) {
             return nullptr;
         }
@@ -93,12 +73,12 @@ public:
         return ret;
     }
 
-    std::size_t Size() {
+    [[nodiscard]] std::size_t Size() {
         std::lock_guard uni{lock_};
         return this->data_que_.size();
     }
 
-    bool Empty() {
+    [[nodiscard]] bool Empty() {
         std::lock_guard uni{lock_};
         return this->data_que_.empty();
     }
@@ -173,7 +153,7 @@ public:
             std::unique_lock un(this->lock_);
 
             // 防止虚假唤醒
-            while(active_.load(std::memory_order_relaxed) && !this->data_que_.empty()) {
+            while(active_.load(std::memory_order_relaxed) && this->data_que_.empty()) {
 
                 this->control_ca_.wait(un, [this]() -> bool {
                     if(!active_.load(std::memory_order_relaxed))

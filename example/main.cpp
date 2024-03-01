@@ -4,6 +4,7 @@
 #include "test_instance.hpp"
 #include "test_thread_thread_pool.hpp"
 #include "test_thread_actor.hpp"
+#include "test_thread_channel.hpp"
 
 int main() {
 

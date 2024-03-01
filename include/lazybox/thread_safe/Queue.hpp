@@ -20,7 +20,7 @@ public:
         queue_.push(std::forward<U>(value));
     }
 
-    bool Pop(T &value) {
+    [[nodiscard]] bool Pop(T &value) {
         std::lock_guard<FastLock> lock(lock_);
         if(queue_.empty()) {
             return false;
@@ -35,7 +35,7 @@ public:
         return queue_.size();
     }
 
-    bool Empty() {
+    [[nodiscard]] bool Empty() {
         std::lock_guard<FastLock> lock(lock_);
         return queue_.empty();
     }
@@ -57,7 +57,7 @@ public:
         std::lock_guard<FastLock> lock(lock_);
         this->queue_.swap(std::queue<T>());
     }
-    
+
 private:
     std::queue<T> queue_;
     FastLock      lock_;
