@@ -109,7 +109,7 @@ public:
 
 
     std::size_t GetThreadCount() {
-        std::lock_guard lock{this->control_mutex_};
+        std::lock_guard<std::mutex> lock{this->control_mutex_};
         return thread_active_count_;
     }
 
