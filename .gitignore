@@ -1,0 +1,12 @@
+/bin/
+/.idea/
+/build/
+/lib/
+
+# cmake
+/CMakeFiles/
+/cmake-build-*/
+
+# gcc build
+/Makefile/
+/Makefile.*
