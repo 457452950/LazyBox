@@ -10,4 +10,7 @@ add_library(${LIBRARY_NAME}
         thread/Actor.cpp
         test/TestEngine.cpp
         test/TestCase.cpp
+        logger/Logger.cpp
 )
+
+target_link_libraries(${LIBRARY_NAME} fmt)

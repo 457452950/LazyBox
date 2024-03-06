@@ -1,0 +1,13 @@
+#pragma once
+#ifndef LAZYBOX_INCLUDE_LAZYBOX_BASE_COMPILEINFO_H_
+#define LAZYBOX_INCLUDE_LAZYBOX_BASE_COMPILEINFO_H_
+
+#include <cassert>
+
+#ifdef NDEBUG
+#define LBOX_NDEBUG
+#else
+#define LBOX_DEBUG
+#endif
+
+#endif // LAZYBOX_INCLUDE_LAZYBOX_BASE_COMPILEINFO_H_

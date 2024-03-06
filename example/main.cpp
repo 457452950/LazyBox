@@ -7,7 +7,6 @@
 #include "test_thread_channel.hpp"
 
 int main() {
-
     lbox::test::TestEngine ::GetInstance()->RunAllTest();
 
     return 0;
