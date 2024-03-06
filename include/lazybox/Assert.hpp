@@ -20,11 +20,10 @@ static_assert(VA_OPT_SUPPORTED);
     if(!static_cast<bool>(condition)) {                                                                                \
         bool p = (false __VA_OPT__(, true));                                                                           \
         if(p) {                                                                                                        \
-            lbox::print("assert : " __VA_ARGS__);                                                                      \
+            lbox::println(stderr, "assert : " __VA_ARGS__);                                                            \
         } else {                                                                                                       \
-            lbox::print("assert : " #condition "\n");                                                                  \
+            lbox::print(stderr, "assert : " #condition "\n");                                                          \
         }                                                                                                              \
-        fflush(stdout);                                                                                                \
         assert(condition);                                                                                             \
     }
 #else
@@ -32,9 +31,9 @@ static_assert(VA_OPT_SUPPORTED);
     if(!static_cast<bool>(condition)) {                                                                                \
         bool p = (false __VA_OPT__(, true));                                                                           \
         if(p) {                                                                                                        \
-            lbox::print(fg(lbox::color::crimson), "assert : " __VA_ARGS__);                                            \
+            lbox::print(stderr, fg(lbox::color::crimson), "assert : " __VA_ARGS__);                                    \
         } else {                                                                                                       \
-            lbox::print(fg(lbox::color::crimson), "assert : " #condition "\n");                                        \
+            lbox::print(stderr, fg(lbox::color::crimson), "assert : " #condition "\n");                                \
         }                                                                                                              \
         fflush(stdout);                                                                                                \
         assert(condition);                                                                                             \

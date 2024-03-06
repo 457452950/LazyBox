@@ -3,10 +3,11 @@
 #include "lazybox/test/TestEngine.hpp"
 
 #include "lazybox/test/TestCase.hpp"
+#include "lazybox/Assert.hpp"
 
 namespace lbox::test {
 
-void TestEngineImpl::RunAllTest() {
+void TestEngine::RunAllTest() {
     for(auto &[name, list] : name_2_cases_) {
         for(auto it : list) {
             it->Run();
@@ -15,11 +16,11 @@ void TestEngineImpl::RunAllTest() {
     Report();
 }
 
-void TestEngineImpl::AddCase(TestCase *a_case) { this->name_2_cases_[a_case->case_name].push_back(a_case); }
+void TestEngine::AddCase(TestCase *a_case) { this->name_2_cases_[a_case->case_name].push_back(a_case); }
 
-TestEngineImpl::~TestEngineImpl() {}
+TestEngine::~TestEngine() {}
 
-void TestEngineImpl::Report() {
+void TestEngine::Report() {
     printf("\n");
     std::for_each(this->name_2_cases_.begin(), this->name_2_cases_.end(), [this](auto &it) {
         auto &[name, list] = it;
@@ -27,7 +28,7 @@ void TestEngineImpl::Report() {
         printf("---------------------------------------------------------\n");
         printf("|case : %s\n", name.c_str());
 
-        int32_t total_cost = 0;
+        int64_t total_cost = 0;
 
         std::for_each(list.begin(), list.end(), [&total_cost](TestCase *it) {
             switch(it->case_state) {
@@ -67,7 +68,12 @@ void TestEngineImpl::Report() {
             }
 
             if(it->time_end >= it->time_start) {
-                auto cost   = it->time_end - it->time_start;
+                auto cost = it->time_end - it->time_start;
+                Assert(cost >= 0,
+                       "test case cant be less than 0, case {}, part {}, cost {}",
+                       it->case_name,
+                       it->part_name,
+                       cost);
                 total_cost += cost;
                 printf("                         -- cost : %lld ms\n", cost);
             } else {

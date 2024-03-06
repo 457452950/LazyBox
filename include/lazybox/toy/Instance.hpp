@@ -14,7 +14,7 @@ namespace lbox {
  * @tparam T 单例类
  */
 template <class T>
-class Instance final : public NonCopyAble {
+class Instance : public NonCopyAble {
 public:
     using ValueType    = T;
     using ValuePointer = T *;
@@ -29,7 +29,7 @@ public:
         return std::addressof(instance);
     }
 
-private:
+protected:
     Instance()  = default;
     ~Instance() = default;
 };
@@ -39,7 +39,7 @@ private:
  * @tparam T 单例类
  */
 template <class T>
-class GlobalInstance final : public NonCopyAble {
+class GlobalInstance : public NonCopyAble {
 public:
     using ValueType    = T;
     using ValuePointer = T *;
@@ -84,6 +84,7 @@ private:
     static std::atomic<ValuePointer> instance_;
     static FastLock                  lock_;
 
+protected:
     GlobalInstance()  = default;
     ~GlobalInstance() = default;
 };
@@ -99,7 +100,7 @@ inline FastLock GlobalInstance<T>::lock_;
  * @tparam T
  */
 template <class T>
-class ThreadInstance final : public NonCopyAble {
+class ThreadInstance : public NonCopyAble {
 public:
     using ValueType    = T;
     using ValuePointer = T *;
@@ -124,6 +125,7 @@ public:
 private:
     static thread_local ValuePointer instance_;
 
+protected:
     ThreadInstance()  = default;
     ~ThreadInstance() = default;
 };

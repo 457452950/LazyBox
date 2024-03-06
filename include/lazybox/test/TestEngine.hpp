@@ -14,12 +14,14 @@ namespace lbox::test {
 class TestCase;
 
 
-class TestEngineImpl {
+class TestEngine : public Instance<TestEngine> {
     friend class TestCase;
 
 public:
+    TestEngine() = default;
+    ~TestEngine();
+
     void RunAllTest();
-    ~TestEngineImpl();
 
 protected:
     void AddCase(TestCase *a_case);
@@ -30,8 +32,6 @@ private:
     using case_list = std::vector<TestCase *>;
     std::unordered_map<std::string, case_list> name_2_cases_;
 };
-
-using TestEngine = Instance<TestEngineImpl>;
 
 } // namespace lbox::test
 

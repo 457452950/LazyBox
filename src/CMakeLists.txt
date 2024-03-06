@@ -11,6 +11,8 @@ add_library(${LIBRARY_NAME}
         test/TestEngine.cpp
         test/TestCase.cpp
         logger/Logger.cpp
+        logger/LogFormatter.cpp
+        logger/LogWriter.cpp
 )
 
 target_link_libraries(${LIBRARY_NAME} fmt)
