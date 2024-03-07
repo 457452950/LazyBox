@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LAZYBOX_INCLUDE_THREAD_ACTOR_HPP_
 #define LAZYBOX_INCLUDE_THREAD_ACTOR_HPP_
 

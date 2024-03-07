@@ -28,7 +28,7 @@ void Logger::Write(LogLevel level, const std::string &tag, const std::string &me
     if(std_writer_) {
         std_writer_->Commit(entry);
     }
-    for(auto &it : loggers_) {
+    for(auto it : loggers_) {
         it->Commit(entry);
     }
 }
@@ -39,13 +39,14 @@ Logger *Logger::SetSTDLogger(bool enable) {
 }
 
 Logger *Logger::AddFileLogger(const std::filesystem::path &output_path) {
-    auto writer = std::make_shared<FileWriter>();
+    auto writer = std::make_shared<AsyncFileWriter>();
     if(!writer->Open(output_path)) {
         return nullptr;
     }
     loggers_.push_back(writer);
     return this;
 }
+
 void Logger::Stop() {
     for(auto &it : loggers_) {
         it->Stop();

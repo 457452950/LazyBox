@@ -1,4 +1,4 @@
-#include "lazybox/logger/LogWriter.hpp"
+﻿#include "lazybox/logger/LogWriter.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -21,67 +21,63 @@ void ConsoleWriter::Commit(const LogEntry &entry) {
 FileWriter::FileWriter() = default;
 
 FileWriter::~FileWriter() {
-    if(output_.is_open()) {
-        output_.flush();
-        output_.close();
+    if(output_ && output_->is_open()) {
+        output_->flush();
+        output_->close();
+
+        delete output_;
+        output_ = nullptr;
     }
 }
 
-bool FileWriter::Open(const std::filesystem::path &filename) {
-    file_name_ = filename.string();
-    lbox::println("file name {} {}", file_name_, filename);
-
-    //    output_.clear();
-    output_.open(file_name_, std::ios::binary | std::ios::out | std::ios::app);
-    //    output_ << 1;
-    GetFileSize();
-    if(!output_.is_open()) {
-        lbox::print(stderr, "Failed to open file {}\n", file_name_);
-        return false;
-    }
-    return true;
-}
+bool FileWriter::Open(const std::filesystem::path &filename) { return this->Reset(filename); }
 
 void FileWriter::Commit(const LogEntry &entry) {
     this->PreCommit(entry);
-    // 输出到文件
-    //    output_.write(entry.message.c_str(), static_cast<int64_t>(entry.message.size()));
-    //    output_ << 1;
-    output_ << entry.message;
+    output_->write(entry.message.c_str(), static_cast<int64_t>(entry.message.size()));
     //    lbox::println("commit {} {}", entry.message, entry.message.size());
     this->Committed();
 }
 
 int64_t FileWriter::GetFileSize() {
-    output_.seekp(0, std::ofstream::end);
-    return output_.tellp();
+    output_->seekp(0, std::ofstream::end);
+    return output_->tellp();
 }
 
-void FileWriter::Committed() {
-    this->Flush();
-    //    lbox::println("file size {}", GetFileSize());
-}
+void FileWriter::Committed() { this->Flush(); }
 
 void FileWriter::Flush() {
-    Assert(output_.is_open());
-    output_.flush();
+    Assert(output_->is_open());
+    output_->flush();
 }
 
 void FileWriter::PreCommit(const LogEntry &entry) {}
 
-void FileWriter::Reset() {
-    if(output_.is_open()) {
-        output_.flush();
-        output_.close();
+bool FileWriter::Reset(const std::filesystem::path &new_file) {
+    if(file_path_ == new_file) {
+        return true;
     }
+    file_path_ = new_file;
+
+    if(output_) {
+        if(output_->is_open()) {
+            output_->flush();
+            output_->close();
+        }
+        delete output_;
+        output_ = nullptr;
+    }
+
+    output_ = new std::ofstream(file_path_, std::ios::binary | std::ios::out | std::ios::app);
+    return output_->is_open();
 }
 
-std::string FileWriter::GetFileName() const { return file_name_; }
+std::filesystem::path FileWriter::GetFilePath() const { return file_path_; }
 
 void FileWriter::Stop() {
-    if(output_.is_open()) {
-        output_.flush();
-        output_.close();
+    if(output_->is_open()) {
+        output_->flush();
+        output_->close();
     }
 }
 
@@ -104,15 +100,19 @@ void AsyncFileWriter::work_loop() {
             FileWriter::Commit(entry);
         }
     }
+
+    this->Flush();
 }
 
 void AsyncFileWriter::stop() {
-    active_.store(false);
-    // 等待工作线程退出
-    this->WakeUp();
-    stop_future_.get();
+    if(active_) {
+        active_.store(false);
+        // wait for thread quit
+        this->WakeUp();
+        stop_future_.get();
 
-    FileWriter::Stop();
+        FileWriter::Stop();
+    }
 }
 
 

@@ -15,8 +15,8 @@ int main() {
     auto path = std::filesystem::temp_directory_path();
     //    path      = path / "abasdasdc.log";
     //    path      = std::filesystem::current_path();
-    path      = path / "abasdasdc.log";
-    std::cout << path << std::endl;
+    path      = path / "abc.log";
+    //    std::cout << path << std::endl;
     lbox::println("log file: {}", path);
 
     auto l = lbox::Logger::GetInstance()->SetConfig({lbox::LogLevel::L_DEBUG})->SetSTDLogger(true)->AddFileLogger(path);
@@ -36,7 +36,7 @@ int main() {
     //    lbox::test::TestEngine ::GetInstance()->RunAllTest();
 
 
-    //    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     lbox::Logger::GetInstance()->Stop();
 

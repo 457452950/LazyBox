@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LAZYBOX_SRC_LOGGER_LOGWRITER_HPP_
 #define LAZYBOX_SRC_LOGGER_LOGWRITER_HPP_
 
@@ -44,11 +44,11 @@ public:
 protected:
     int64_t GetFileSize();
 
-    std::string GetFileName() const;
+    std::filesystem::path GetFilePath() const;
 
     void Flush();
 
-    void Reset();
+    bool Reset(const std::filesystem::path &new_file);
 
 protected:
     virtual void PreCommit(const LogEntry &entry);
@@ -56,8 +56,8 @@ protected:
     virtual void Committed();
 
 private:
-    std::string   file_name_;
-    std::ofstream output_;
+    std::filesystem::path file_path_;
+    std::ofstream        *output_{nullptr};
 };
 
 class AsyncFileWriter : public FileWriter, protected WaitableActor<LogEntry> {
