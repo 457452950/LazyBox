@@ -210,19 +210,13 @@ protected:
      *         true for success
      */
     [[nodiscard]] bool Get(value_ref v) {
-        std::unique_lock un(this->control_mutex_);
+        {
+            std::unique_lock un(this->control_mutex_);
 
-        if(this->msg_que_.Empty()) {
-            this->control_ca_.wait(un);
+            if(this->msg_que_.Empty()) {
+                this->control_ca_.wait(un);
+            }
         }
-
-        //        if(this->msg_que_.empty()) {
-        //            return false;
-        //        }
-        //
-        //        v = std::move(this->msg_que_.front());
-        //        this->msg_que_.pop();
-        //        return true;
 
         if(this->msg_que_.Pop(v)) {
             return true;
@@ -241,19 +235,13 @@ protected:
      */
     template <class Rep, class Period>
     [[nodiscard]] bool Get(value_ref v, const std::chrono::duration<Rep, Period> &rel_time) {
-        std::unique_lock un(this->control_mutex_);
+        {
+            std::unique_lock un(this->control_mutex_);
 
-        if(this->msg_que_.Empty()) {
-            this->control_ca_.wait_for(un, rel_time);
+            if(this->msg_que_.Empty()) {
+                this->control_ca_.wait_for(un, rel_time);
+            }
         }
-
-        //        if(this->msg_que_.empty()) {
-        //            return false;
-        //        }
-        //
-        //        v = std::move(this->msg_que_.front());
-        //        this->msg_que_.pop();
-        //        return true;
 
         if(this->msg_que_.Pop(v)) {
             return true;

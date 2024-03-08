@@ -12,9 +12,9 @@ namespace lbox {
 
 void ConsoleWriter::Commit(const LogEntry &entry) {
     if(entry.level >= L_ERROR) {
-        lbox::print(stderr, "{}\n", entry.message);
+        lbox::print(stderr, "{}", entry.message);
     } else {
-        lbox::print(stdout, "{}\n", entry.message);
+        lbox::print(stdout, "{}", entry.message);
     }
 }
 
@@ -38,6 +38,7 @@ void FileWriter::Commit(const LogEntry &entry) {
     //    lbox::println("commit {} {}", entry.message, entry.message.size());
     this->Committed();
 }
+
 
 int64_t FileWriter::GetFileSize() {
     output_->seekp(0, std::ofstream::end);

@@ -8,13 +8,29 @@
 
 namespace lbox {
 
-enum LogLevel {
+enum LogLevel : int16_t {
     L_DEBUG,
     L_INFO,
-    L_WARNING,
+    L_WARN,
     L_ERROR,
     L_FATAL,
 };
+
+inline std::string_view LogLevelToString(LogLevel level) {
+    switch(level) {
+    case L_DEBUG:
+        return "DEBUG";
+    case L_INFO:
+        return "INFO";
+    case L_WARN:
+        return "WARN";
+    case L_ERROR:
+        return "ERROR";
+    case L_FATAL:
+        return "FATAL";
+    }
+    return "UNKNOWN";
+}
 
 enum LogOutput { STDOUT = 0x01, FILE = 0x02 };
 

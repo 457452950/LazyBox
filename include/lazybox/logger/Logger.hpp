@@ -14,16 +14,22 @@
 
 namespace lbox {
 
+class LogHelper;
 
 class Logger : public Instance<Logger> {
+    friend class LogHelper;
+
 public:
-    Logger()  = default;
+    Logger();
     ~Logger() = default;
 
     Logger *SetConfig(const LogConfig &config);
 
-    Logger *AddFileLogger(const std::filesystem::path &output_path);
     Logger *SetSTDLogger(bool enable = true);
+    Logger *AddFileLogger(const std::filesystem::path &output_path, bool async = false);
+    Logger *AddWriter(std::shared_ptr<FileWriter> writer);
+
+    Logger *SetFormmater(std::shared_ptr<LogFormatter> formatter);
 
     bool     CheckTag(const std::string &tag) const;
     LogLevel Level() const;
@@ -33,16 +39,56 @@ public:
     void Stop();
 
 private:
+    std::atomic_bool                         active_{true};
     LogConfig                                config_;
     std::vector<std::shared_ptr<FileWriter>> loggers_;
     std::shared_ptr<LogWriter>               std_writer_{nullptr};
+    std::shared_ptr<LogFormatter>            formatter_{nullptr};
 };
 
-namespace {
-void _check_compile() {}
+class LogHelper final {
+public:
+    template <typename... Args>
+    static void Commit(const LogHead &head, const lbox::format_string<Args...> fmt, Args &&...args) {
+        auto log = Logger::GetInstance();
+        auto tag = to_string(head.tag);
 
-} // namespace
+        if(!log->active_.load(std::memory_order_acquire)) {
+            return;
+        }
+
+        if(log->CheckTag(tag) && log->Level() <= head.level) {
+            log->Write(head.level,
+                       tag,
+                       log->formatter_->Format(head, lbox::vformat(fmt, lbox::make_format_args(args...))));
+        }
+    }
+};
 
 } // namespace lbox
+
+#define LOG_(level, tag, ...)                                                                                          \
+    lbox::LogHelper::Commit(MAKELOGHEAD(lbox::LogLevel::L_##level, tag) __VA_OPT__(, ) __VA_ARGS__)
+
+#define LOG_FAT(tag, ...) LOG_(FATAL, tag, __VA_ARGS__)
+#define LOG_ERR(tag, ...) LOG_(ERROR, tag, __VA_ARGS__)
+#define LOG_WAR(tag, ...) LOG_(WARN, tag, __VA_ARGS__)
+#define LOG_INF(tag, ...) LOG_(INFO, tag, __VA_ARGS__)
+#define LOG_DBG(tag, ...) LOG_(DEBUG, tag, __VA_ARGS__)
+
+namespace {
+void _check_compile() {
+    LOG_DBG("abc", "hello");
+    LOG_DBG("abc", "hello {}", "world");
+    LOG_INF("abc", "hello");
+    LOG_INF("abc", "hello {}", "world");
+    LOG_WAR("abc", "hello");
+    LOG_WAR("abc", "hello {}", "world");
+    LOG_ERR("abc", "hello");
+    LOG_ERR("abc", "hello {}", "world");
+    LOG_FAT("abc", "hello");
+    LOG_FAT("abc", "hello {}", "world");
+}
+} // namespace
 
 #endif // LAZYBOX_INCLUDE_LAZYBOX_LOGGER_LOGGER_HPP_

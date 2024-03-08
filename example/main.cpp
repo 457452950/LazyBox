@@ -9,6 +9,9 @@
 #include "lazybox/Assert.hpp"
 #include "lazybox/logger/Logger.hpp"
 
+#include "lazybox/fmt/Format.h"
+#include "lazybox/Chrono.h"
+
 #include <filesystem>
 
 int main() {
@@ -19,24 +22,24 @@ int main() {
     //    std::cout << path << std::endl;
     lbox::println("log file: {}", path);
 
-    auto l = lbox::Logger::GetInstance()->SetConfig({lbox::LogLevel::L_DEBUG})->SetSTDLogger(true)->AddFileLogger(path);
+    auto l = lbox::Logger::GetInstance()->SetConfig({lbox::LogLevel::L_INFO})->SetSTDLogger(true)->AddFileLogger(path);
 
     Assert(l, "errno {}", errno);
+    std::chrono::time_point<std::chrono::system_clock> n = std::chrono::system_clock::now();
 
+    lbox::DefaultLogFormatter f;
     lbox::Logger::GetInstance()->Write(
-            lbox::LogLevel::L_DEBUG, "", lbox::format("hello world {}", std::this_thread::get_id()));
-    lbox::Logger::GetInstance()->Write(
-            lbox::LogLevel::L_DEBUG, "", lbox::format("hello world {}", std::this_thread::get_id()));
-    lbox::Logger::GetInstance()->Write(
-            lbox::LogLevel::L_DEBUG, "", lbox::format("hello world {}", std::this_thread::get_id()));
-    lbox::Logger::GetInstance()->Write(
-            lbox::LogLevel::L_DEBUG, "", lbox::format("hello world {}", std::this_thread::get_id()));
-
-    //    Assert(1 == 2, "1!=2 {}", std::this_thread::get_id());
-    //    lbox::test::TestEngine ::GetInstance()->RunAllTest();
+            lbox::LogLevel::L_DEBUG, "abc", f.Format(MAKELOGHEAD(lbox::LogLevel::L_DEBUG, "abc"), "asdasdasP{}asdsad"));
 
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    LOG_INF("abd", "asdasd");
+    LOG_INF("abd", "{}", "abasdas");
+    LOG_INF("abd", "{}", n);
+    LOG_DBG("abd", "{}", n);
+    LOG_INF("abd", "{}", "abasdas");
+    LOG_WAR("abd", "{}", "abasdas");
+    LOG_ERR("abd", "{}", "abasdas");
+    LOG_FAT("abd", "{}", "abasdas");
 
     lbox::Logger::GetInstance()->Stop();
 
