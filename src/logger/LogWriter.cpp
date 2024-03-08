@@ -1,4 +1,4 @@
-﻿#include "lazybox/logger/LogWriter.hpp"
+﻿#include "lazybox/logger/LogReporter.hpp"
 
 #include <iostream>
 #include <filesystem>

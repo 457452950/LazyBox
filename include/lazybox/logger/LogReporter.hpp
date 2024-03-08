@@ -12,32 +12,34 @@
 
 namespace lbox {
 
-class LogWriter : public NonCopyAble {
+class LogReporter : public NonCopyAble {
 public:
-    LogWriter()          = default;
-    virtual ~LogWriter() = default;
+    LogReporter()          = default;
+    virtual ~LogReporter() = default;
 
 public:
     virtual void Commit(const LogEntry &entry) = 0;
+    virtual void Stop()                        = 0;
 };
 
-class ConsoleWriter : public LogWriter {
+class ConsoleWriter : public LogReporter {
 public:
     ConsoleWriter()           = default;
     ~ConsoleWriter() override = default;
 
 protected:
     void Commit(const LogEntry &entry) override;
+    void Stop() override {}
 };
 
-class FileWriter : public LogWriter {
+class FileWriter : public LogReporter {
 public:
     explicit FileWriter();
     ~FileWriter() override;
 
     bool Open(const std::filesystem::path &filename);
 
-    virtual void Stop();
+    void Stop() override;
 
     void Commit(const LogEntry &entry) override;
 
@@ -67,7 +69,6 @@ public:
 
     void Stop() override;
 
-protected:
     void Commit(const LogEntry &entry) override;
 
 private:

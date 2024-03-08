@@ -69,8 +69,8 @@ Logger *Logger::SetFormmater(std::shared_ptr<LogFormatter> formatter) {
     return this;
 }
 
-Logger *Logger::AddWriter(std::shared_ptr<FileWriter> writer) {
-    this->loggers_.push_back(writer);
+Logger *Logger::AddReporter(std::shared_ptr<LogReporter> reporter) {
+    this->loggers_.push_back(reporter);
     return this;
 }
 

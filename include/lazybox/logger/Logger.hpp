@@ -10,7 +10,7 @@
 
 #include "Basic.hpp"
 #include "LogFormatter.hpp"
-#include "LogWriter.hpp"
+#include "LogReporter.hpp"
 
 namespace lbox {
 
@@ -27,7 +27,7 @@ public:
 
     Logger *SetSTDLogger(bool enable = true);
     Logger *AddFileLogger(const std::filesystem::path &output_path, bool async = false);
-    Logger *AddWriter(std::shared_ptr<FileWriter> writer);
+    Logger *AddReporter(std::shared_ptr<LogReporter> reporter);
 
     Logger *SetFormmater(std::shared_ptr<LogFormatter> formatter);
 
@@ -39,11 +39,11 @@ public:
     void Stop();
 
 private:
-    std::atomic_bool                         active_{true};
-    LogConfig                                config_;
-    std::vector<std::shared_ptr<FileWriter>> loggers_;
-    std::shared_ptr<LogWriter>               std_writer_{nullptr};
-    std::shared_ptr<LogFormatter>            formatter_{nullptr};
+    std::atomic_bool                          active_{true};
+    LogConfig                                 config_;
+    std::vector<std::shared_ptr<LogReporter>> loggers_;
+    std::shared_ptr<LogReporter>              std_writer_{nullptr};
+    std::shared_ptr<LogFormatter>             formatter_{nullptr};
 };
 
 class LogHelper final {
