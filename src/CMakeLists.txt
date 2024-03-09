@@ -8,8 +8,11 @@ add_library(${LIBRARY_NAME}
         thread/ThreadPool.cpp
         thread/Channel.cpp
         thread/Actor.cpp
+
         test/TestEngine.cpp
         test/TestCase.cpp
+        test/TestAction.cpp
+
         logger/Logger.cpp
         logger/LogFormatter.cpp
         logger/LogWriter.cpp

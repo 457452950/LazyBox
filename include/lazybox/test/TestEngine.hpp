@@ -12,10 +12,14 @@
 namespace lbox::test {
 
 class TestCase;
-
+class TestAction;
+class PreAction;
+class EndAction;
 
 class TestEngine : public Instance<TestEngine> {
     friend class TestCase;
+    friend class PreAction;
+    friend class EndAction;
 
 public:
     TestEngine() = default;
@@ -25,12 +29,18 @@ public:
 
 protected:
     void AddCase(TestCase *a_case);
+    void AddPreAction(TestAction *action);
+    void AddEndAction(TestAction *action);
 
     void Report();
 
 private:
     using case_list = std::vector<TestCase *>;
     std::unordered_map<std::string, case_list> name_2_cases_;
+
+    using action_list = std::vector<TestAction *>;
+    action_list pre_actions_;
+    action_list end_actions_;
 };
 
 } // namespace lbox::test

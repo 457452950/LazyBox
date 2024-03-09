@@ -1,18 +1,26 @@
-#include <iostream>
-#include <algorithm>
 #include "lazybox/test/TestEngine.hpp"
 
 #include "lazybox/test/TestCase.hpp"
+#include "lazybox/test/TestAction.hpp"
 #include "lazybox/Assert.hpp"
 
 namespace lbox::test {
 
 void TestEngine::RunAllTest() {
+    for(auto action : this->pre_actions_) {
+        action->Do();
+    }
+
     for(auto &[name, list] : name_2_cases_) {
         for(auto it : list) {
             it->Run();
         }
     }
+
+    for(auto action : this->end_actions_) {
+        action->Do();
+    }
+
     Report();
 }
 
@@ -87,5 +95,9 @@ void TestEngine::Report() {
         printf("---------------------------------------------------------\n");
     });
 }
+
+void TestEngine::AddPreAction(TestAction *action) { this->pre_actions_.push_back(action); }
+
+void TestEngine::AddEndAction(TestAction *action) { this->end_actions_.push_back(action); }
 
 } // namespace lbox::test

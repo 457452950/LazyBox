@@ -3,7 +3,9 @@
 #define LAZYBOX_INCLUDE_LAZYBOX_TEST_TEST_H_
 
 #include "TestEngine.hpp"
+#include "TestAction.hpp"
 #include "TestCase.hpp"
+#include "../toy/DEFER.hpp"
 
 #define TCASE(CASE_NAME, PART_NAME)                                                                                    \
     namespace {                                                                                                        \
@@ -37,6 +39,24 @@
         AddPass(true);                                                                                                 \
     }
 
+#define TPREPARE                                                                                                       \
+    namespace {                                                                                                        \
+    class MAKEUNIQUENAME(_TPREPARE, _, __LINE__) : public lbox::test::PreAction {                                      \
+        void Do() override;                                                                                            \
+    } MAKEUNIQUENAME(_TPREPARE, __COUNTER__, __LINE__);                                                                \
+    }                                                                                                                  \
+    void MAKEUNIQUENAME(_TPREPARE, _, __LINE__)::Do()
+
+#define TCLOSURE                                                                                                       \
+    namespace {                                                                                                        \
+    class MAKEUNIQUENAME(_TCLOSURE, _, __LINE__) : public lbox::test::EndAction {                                      \
+        void Do() override;                                                                                            \
+    } MAKEUNIQUENAME(_TCLOSURE, __COUNTER__, __LINE__);                                                                \
+    }                                                                                                                  \
+    void MAKEUNIQUENAME(_TCLOSURE, _, __LINE__)::Do()
+
+
+// #define TEST_DEMO
 #ifdef TEST_DEMO
 namespace {
 TCASE(TEST_DEMO, EQUE) {
@@ -72,6 +92,12 @@ TCASE(TEST_DEMO, THROW) {
 }
 
 TCASE(TEST_DEMO, COST) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
+
+TPREPARE { printf("TPREPARE1\n"); }
+TPREPARE { printf("TPREPARE2\n"); }
+
+TCLOSURE { printf("TCLOSURE1\n"); };
+TCLOSURE { printf("TCLOSURE2\n"); };
 
 } // namespace
 #endif

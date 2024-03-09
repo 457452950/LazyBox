@@ -14,8 +14,8 @@ public:
     std::function<void()> f_;
 };
 
-#define STR_CONTACT(A, B) A##B
-#define STR_CONTACT2(A, B) STR_CONTACT(A, B)
+#define MAKEUNIQUENAME_(tag, A, B) tag##A##B
+#define MAKEUNIQUENAME(tag, A, B) MAKEUNIQUENAME_(tag, A, B)
 
 /**
  * @example
@@ -24,7 +24,7 @@ public:
  *      DEFER( [pint]()->void{ delete[] pint; } );          \n
  * }
  */
-#define DEFER(func) auto STR_CONTACT2(__temp_, __LINE__) = std::make_shared<lbox::DeferHelper>(func)
+#define DEFER(func) auto MAKEUNIQUENAME(_DEFER, __COUNTER__, __LINE__) = std::make_shared<lbox::DeferHelper>(func)
 
 } // namespace lbox
 

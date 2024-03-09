@@ -10,7 +10,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 include_directories("include")
 
 if (MSVC)
-    add_compile_options("/Zc:preprocessor")
+    add_compile_options("/Zc:preprocessor" "/Zc:__cplusplus")
 endif ()
 
 add_subdirectory(third_party/fmt)
