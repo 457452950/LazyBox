@@ -15,7 +15,7 @@ TCASE(Thread, ThreadPool1) {
     const auto times = 10000;
 
     for(int i = 0; i < times; ++i) {
-        pool.Submit([i, &counter]() { counter.fetch_add(1, std::memory_order_relaxed); });
+        pool.Submit([&counter]() { counter.fetch_add(1, std::memory_order_relaxed); });
     }
     while(counter.load() < times) {
         std::this_thread::yield();

@@ -6,8 +6,8 @@
 #include <vector>
 #include <exception>
 
-#include "../Chrono.h"
-#include "../toy/Instance.hpp"
+#include "lazybox/Chrono.h"
+#include "lazybox/toy/Instance.hpp"
 
 namespace lbox::test {
 

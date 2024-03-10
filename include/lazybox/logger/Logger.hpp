@@ -77,7 +77,7 @@ public:
 #define LOG_DBG(tag, ...) LOG_(DEBUG, tag, __VA_ARGS__)
 
 namespace {
-void _check_compile() {
+[[maybe_unused]] void _check_compile() {
     LOG_DBG("abc", "hello");
     LOG_DBG("abc", "hello {}", "world");
     LOG_INF("abc", "hello");

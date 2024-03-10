@@ -43,7 +43,7 @@ protected:
      * @param v 数据
      * @return 返回false时略过此条数据
      */
-    virtual bool SendingMessageFilter(const value_type &v) { return true; }
+    virtual bool SendingMessageFilter(const value_type & /* v */) { return true; }
 
 protected:
     std::size_t Size() noexcept(true) {
@@ -113,7 +113,7 @@ public:
      * @param v 数据
      * @return 返回false时略过此条数据
      */
-    [[nodiscard]] virtual bool SendingMessageFilter(const value_type &v) { return true; }
+    [[nodiscard]] virtual bool SendingMessageFilter(const value_type & /* v */) { return true; }
 
 protected:
     std::size_t Size() {
@@ -173,10 +173,6 @@ public:
     template <class U>
     void Send(U &&m) {
         if(this->SendingMessageFilter(m)) {
-            //            {
-            //                std::lock_guard uni{control_mutex_};
-            //                msg_que_.push(std::forward<U>(m));
-            //            }
             msg_que_.Push(std::forward<U>(m));
             this->WakeUp();
         }
@@ -188,7 +184,7 @@ public:
      * @param v 数据
      * @return 返回false时略过此条数据
      */
-    [[nodiscard]] virtual bool SendingMessageFilter(const value_type &v) { return true; }
+    [[nodiscard]] virtual bool SendingMessageFilter(const value_type & /* v */) { return true; }
 
 protected:
     std::size_t Size() noexcept(true) {

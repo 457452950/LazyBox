@@ -3,6 +3,10 @@ project(${LIBRARY_NAME})
 
 set(CMAKE_CXX_STANDARD 20)
 
+if (MSVC)
+    add_compile_options("/std:c++20")
+endif ()
+
 add_library(${LIBRARY_NAME}
         thread/Lock.cpp
         thread/ThreadPool.cpp
