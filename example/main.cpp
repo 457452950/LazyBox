@@ -9,9 +9,10 @@
 #include "lazybox/logger/Logger.hpp"
 
 TPREPARE {
-    lbox::Logger::GetInstance()->SetConfig({lbox::LogLevel::L_INFO})->SetSTDLogger(true);
+    lbox::Logger::GetInstance()->SetConfig({lbox::LogLevel::L_INFO})->SetSTDLogger(true)->AddFileLogger("test.log");
 
     LOG_INF("sys", "{}", __cplusplus);
+    LOG_INF("test", "{}", "中国China完成");
 };
 
 TCLOSURE {

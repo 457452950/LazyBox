@@ -25,6 +25,9 @@ TCASE(Instance, ThreadLocal) {
 
     auto addr3 = std::async(std::launch::async, func).get();
     TASSERT(addr1 != addr3, "Addresses should not be the same");
+
+    AA::Destroy();
+    delete addr3;
 }
 
 TCASE(Instance, Global) {
@@ -32,6 +35,7 @@ TCASE(Instance, Global) {
     AA::Init();
 
     TASSERT(AA::GetInstance() == AA::GetInstance(), "Addresses should be the same");
+    AA::Destroy();
 }
 
 TCASE(Instance, Instance) {

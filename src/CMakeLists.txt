@@ -7,19 +7,31 @@ if (MSVC)
     add_compile_options("/std:c++20")
 endif ()
 
-add_library(${LIBRARY_NAME}
+set(LIBRARY_THREAD_SOURCE
+
         thread/Lock.cpp
         thread/ThreadPool.cpp
         thread/Channel.cpp
-        thread/Actor.cpp
+        thread/Actor.cpp)
+
+set(LIBRARY_TEST_SOURCE
 
         test/TestEngine.cpp
         test/TestCase.cpp
         test/TestAction.cpp
+)
+
+set(LIBRARY_LOGGER_SOURCE
 
         logger/Logger.cpp
         logger/LogFormatter.cpp
         logger/LogWriter.cpp
+)
+
+add_library(${LIBRARY_NAME}
+        ${LIBRARY_THREAD_SOURCE}
+        ${LIBRARY_TEST_SOURCE}
+        ${LIBRARY_LOGGER_SOURCE}
 )
 
 target_link_libraries(${LIBRARY_NAME} fmt)

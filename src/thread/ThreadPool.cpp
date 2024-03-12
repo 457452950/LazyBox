@@ -57,13 +57,9 @@ void ThreadPool::checkThreadCount() {
 
 ThreadPool::Worker::Worker(ThreadPool *pool, int index) : thread_index_(index), pool_(pool) {
     assert(pool_);
-    this->worker_ = new std::thread(&ThreadPool::Worker::thread_work_handle, this);
+    this->worker_ = std::make_unique<std::thread>(&ThreadPool::Worker::thread_work_handle, this);
 }
 ThreadPool::Worker::~Worker() {
-    if(this->worker_) {
-        delete this->worker_;
-        worker_ = nullptr;
-    }
     if(pool_) {
         pool_ = nullptr;
     }
@@ -108,7 +104,7 @@ void ThreadPool::Worker::thread_work_handle() {
         task();
     }
     // thread_end
-    std::cout << "thread end " << this->thread_index_ << std::endl;
+    //    std::cout << "thread end " << this->thread_index_ << std::endl;
     this->pool_->WakeUp();
 }
 void ThreadPool::Worker::Join() {

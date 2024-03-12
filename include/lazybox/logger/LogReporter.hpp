@@ -59,6 +59,7 @@ protected:
 
 private:
     std::filesystem::path file_path_;
+    //    std::filesystem::directory_entry file_entry_;
     std::ofstream        *output_{nullptr};
 };
 

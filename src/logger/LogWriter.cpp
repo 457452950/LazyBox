@@ -21,9 +21,11 @@ void ConsoleWriter::Commit(const LogEntry &entry) {
 FileWriter::FileWriter() = default;
 
 FileWriter::~FileWriter() {
-    if(output_ && output_->is_open()) {
-        output_->flush();
-        output_->close();
+    if(output_) {
+        if(output_->is_open()) {
+            output_->flush();
+            output_->close();
+        }
 
         delete output_;
         output_ = nullptr;
@@ -45,7 +47,11 @@ int64_t FileWriter::GetFileSize() {
     return output_->tellp();
 }
 
-void FileWriter::Committed() { this->Flush(); }
+void FileWriter::Committed() {
+    this->Flush();
+    //    file_entry_.refresh();
+    //    lbox::println("commit {} {} {}", file_path_.string(), GetFileSize(), file_entry_.file_size());
+}
 
 void FileWriter::Flush() {
     Assert(output_->is_open());
@@ -70,6 +76,7 @@ bool FileWriter::Reset(const std::filesystem::path &new_file) {
     }
 
     output_ = new std::ofstream(file_path_, std::ios::binary | std::ios::out | std::ios::app);
+    //    file_entry_.assign(file_path_);
     return output_->is_open();
 }
 

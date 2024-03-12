@@ -73,9 +73,9 @@ private:
         void thread_work_handle();
 
     private:
-        int          thread_index_{-1};
-        std::thread *worker_{nullptr};
-        ThreadPool  *pool_{nullptr};
+        int                          thread_index_{-1};
+        std::unique_ptr<std::thread> worker_{nullptr};
+        ThreadPool                  *pool_{nullptr};
     };
 
 public:
@@ -133,15 +133,15 @@ private:
     void checkThreadCount();
 
     void newThread() {
-        std::cout << "new thread, create thread id : " << std::this_thread::get_id() << std::endl;
-        this->workers_.push_back(new Worker(this, static_cast<int>(this->workers_.size())));
+        //        std::cout << "new thread, create thread id : " << std::this_thread::get_id() << std::endl;
+        this->workers_.push_back(std::make_unique<Worker>(this, static_cast<int>(this->workers_.size())));
     }
 
 private:
-    unsigned int             thread_active_count_{4};
-    std::atomic_bool         active_{true};
-    std::vector<Worker *>    workers_;
-    thread_safe::Queue<Task> task_que_;
+    unsigned int                         thread_active_count_{4};
+    std::atomic_bool                     active_{true};
+    std::vector<std::unique_ptr<Worker>> workers_;
+    thread_safe::Queue<Task>             task_que_;
 
     // mutex
     std::mutex              control_mutex_;

@@ -45,7 +45,7 @@ TCASE(Thread, Actor) {
         pool.Submit(func2);
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 
     actor_active = false;
 
