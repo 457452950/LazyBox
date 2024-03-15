@@ -13,9 +13,7 @@ if (MSVC)
     add_compile_options("/Zc:preprocessor,__cplusplus" "-utf-8")
 endif ()
 
-add_subdirectory(third_party/fmt)
-include_directories(third_party/fmt/include)
-
-
-add_subdirectory(src)
 add_subdirectory(example)
+
+add_subdirectory(third_party/fmt)
+add_subdirectory(src)
