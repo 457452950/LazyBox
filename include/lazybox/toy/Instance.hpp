@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LAZYBOX_INCLUDE_TOY_INSTANCE_HPP_
 #define LAZYBOX_INCLUDE_TOY_INSTANCE_HPP_
 
