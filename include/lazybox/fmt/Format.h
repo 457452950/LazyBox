@@ -11,6 +11,7 @@
 #include "../../../third_party/fmt/include/fmt/ostream.h"
 #include "../../../third_party/fmt/include/fmt/compile.h"
 #include "../../../third_party/fmt/include/fmt/core.h"
+#include "../../../third_party/fmt/include/fmt/xchar.h"
 
 namespace lbox {
 using namespace fmt;

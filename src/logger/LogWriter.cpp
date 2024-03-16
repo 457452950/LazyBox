@@ -11,10 +11,16 @@
 namespace lbox {
 
 void ConsoleWriter::Commit(const LogEntry &entry) {
-    if(entry.level >= L_ERROR) {
-        lbox::print(stderr, "{}", entry.message);
-    } else {
-        lbox::print(stdout, "{}", entry.message);
+    try {
+        if(entry.level >= L_ERROR) {
+            lbox::print(stderr, "{}", entry.message);
+        } else {
+            lbox::print(stdout, "{}", entry.message);
+        }
+
+    } catch(const std::exception &error) {
+        fprintf(stderr, "console writer error %s\n", error.what());
+        fprintf(stderr, "skip log : %s\n", entry.message.c_str());
     }
 }
 

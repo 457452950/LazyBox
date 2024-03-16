@@ -49,7 +49,7 @@ private:
 class LogHelper final {
 public:
     template <typename... Args>
-    static void Commit(const LogHead &head, const lbox::format_string<Args...> fmt, Args &&...args) {
+    static void Commit(const LogHead &head, const lbox::format_string<Args...> &fmt, Args &&...args) {
         auto log = Logger::GetInstance();
         auto tag = to_string(head.tag);
 
