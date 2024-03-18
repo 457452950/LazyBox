@@ -9,6 +9,7 @@
 namespace lbox {
 
 enum LogLevel : int16_t {
+    L_VERBOSE,
     L_DEBUG,
     L_INFO,
     L_WARN,
@@ -18,6 +19,8 @@ enum LogLevel : int16_t {
 
 inline std::string_view LogLevelToString(LogLevel level) {
     switch(level) {
+    case L_VERBOSE:
+        return "VERBOSE";
     case L_DEBUG:
         return "DEBUG";
     case L_INFO:

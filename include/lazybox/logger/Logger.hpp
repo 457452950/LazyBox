@@ -74,9 +74,12 @@ public:
 #define LOG_WAR(tag, ...) LOG_(WARN, tag, __VA_ARGS__)
 #define LOG_INF(tag, ...) LOG_(INFO, tag, __VA_ARGS__)
 #define LOG_DBG(tag, ...) LOG_(DEBUG, tag, __VA_ARGS__)
+#define LOG_VER(tag, ...) LOG_(VERBOSE, tag, __VA_ARGS__)
 
 namespace {
 [[maybe_unused]] void _check_compile() {
+    LOG_VER("abc", "hello");
+    LOG_VER("abc", "hello {}", "world");
     LOG_DBG("abc", "hello");
     LOG_DBG("abc", "hello {}", "world");
     LOG_INF("abc", "hello");
