@@ -96,11 +96,14 @@ void FileWriter::Stop() {
 }
 
 
-AsyncFileWriter::AsyncFileWriter() {
+AsyncFileWriter::AsyncFileWriter() : FileWriter{}, WaitableActor<LogEntry>{} {
     this->stop_future_ = std::async(std::launch::async, &AsyncFileWriter::work_loop, this);
 }
 
-AsyncFileWriter::~AsyncFileWriter() { this->stop(); }
+AsyncFileWriter::~AsyncFileWriter() {
+    this->stop();
+    WaitableActor<LogEntry>::Clear();
+}
 
 void AsyncFileWriter::Stop() { this->stop(); }
 

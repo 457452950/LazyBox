@@ -1,11 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(${LIBRARY_NAME})
 
-set(CMAKE_CXX_STANDARD 20)
-
-if (MSVC)
-    add_compile_options("/std:c++20")
-endif ()
+set(CMAKE_CXX_STANDARD 17)
 
 set(LIBRARY_THREAD_SOURCE
 

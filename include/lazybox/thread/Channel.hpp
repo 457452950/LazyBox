@@ -5,6 +5,7 @@
 #include <memory>
 #include <queue>
 
+#include "lazybox/Assert.hpp"
 #include "Lock.hpp"
 #include "lazybox/base/TypeTraits.hpp"
 #include "lazybox/thread_safe/Queue.hpp"
@@ -33,7 +34,8 @@ public:
         this->data_que_.Push(std::forward<U>(data));
     }
 
-    [[nodiscard]] bool Get(value_ref v) noexcept(true) { return this->data_que_.Pop(v); }
+    [[nodiscard]] bool Get(value_ref v) { return this->data_que_.Pop(v); }
+    value_type         Get() { return this->data_que_.Pop(); }
 
     std::size_t Size() { return this->data_que_.Size(); }
 
@@ -46,57 +48,9 @@ private:
 };
 
 
-template <class T>
-    requires(std::is_pointer_v<T> || is_template_of_v<std::shared_ptr, T>)
-class Channel<T> : public NonCopyAble {
-public:
-    using value_type = T;
-
-public:
-    Channel() { static_assert(!std::is_reference_v<T> && !std::is_array_v<T> && !std::is_const_v<T>); }
-    ~Channel() = default;
-
-    template <class U>
-    void Push(U &&data) {
-        std::lock_guard uni{lock_};
-        this->data_que_.push(std::forward<U>(data));
-    }
-
-    [[nodiscard]] value_type Get() {
-        if(this->data_que_.empty()) {
-            return nullptr;
-        }
-
-        std::lock_guard uni{lock_};
-        value_type      ret = std::move(this->data_que_.front());
-        this->data_que_.pop();
-        return ret;
-    }
-
-    [[nodiscard]] std::size_t Size() {
-        std::lock_guard uni{lock_};
-        return this->data_que_.size();
-    }
-
-    [[nodiscard]] bool Empty() {
-        std::lock_guard uni{lock_};
-        return this->data_que_.empty();
-    }
-
-    void Clear() {
-        std::lock_guard        uni{lock_};
-        std::queue<value_type> empty;
-        this->data_que_.swap(empty);
-    }
-
-private:
-    std::queue<value_type> data_que_;
-    FastLock               lock_;
-};
-
 // waitable channel
 template <class T, int max_size = INT16_MAX>
-class WaitableChannel : public NonCopyAble {
+class WaitableChannel : protected Channel<T> {
 public:
     using value_type = T;
     using value_ref  = T &;
@@ -121,14 +75,14 @@ public:
             std::unique_lock un(this->lock_);
 
             // 防止虚假唤醒
-            while(active_.load(std::memory_order_relaxed) && this->data_que_.size() >= max_size) {
+            while(active_.load(std::memory_order_relaxed) && Channel<T>::Size() >= max_size) {
 
                 control_ca_.wait(un, [this]() -> bool {
                     if(!this->active_.load(std::memory_order_relaxed)) {
                         return true;
                     }
 
-                    if(this->data_que_.size() < max_size) {
+                    if(Channel<T>::Size() < max_size) {
                         return true;
                     }
 
@@ -140,7 +94,7 @@ public:
                 return;
             }
 
-            this->data_que_.push(std::forward<U>(data));
+            Channel<T>::Push(std::forward<U>(data));
         }
         this->WakeUpAll();
     }
@@ -153,13 +107,13 @@ public:
             std::unique_lock un(this->lock_);
 
             // 防止虚假唤醒
-            while(active_.load(std::memory_order_relaxed) && this->data_que_.empty()) {
+            while(active_.load(std::memory_order_relaxed) && Channel<T>::Empty()) {
 
                 this->control_ca_.wait(un, [this]() -> bool {
                     if(!active_.load(std::memory_order_relaxed))
                         return true;
 
-                    return !this->data_que_.empty();
+                    return !Channel<T>::Empty();
                 });
             }
 
@@ -167,26 +121,24 @@ public:
                 return;
             }
 
-            v = std::move(this->data_que_.front());
-            this->data_que_.pop();
+            Assert(Channel<T>::Get(v) == true, "waitable channel get value false");
         }
         this->WakeUpAll();
     }
 
     std::size_t Size() {
         std::unique_lock un(this->lock_);
-        return this->data_que_.size();
+        return Channel<T>::Size();
     }
 
     bool Empty() {
         std::unique_lock un(this->lock_);
-        return this->data_que_.empty();
+        return Channel<T>::Empty();
     }
 
     void Clear() {
-        std::unique_lock       un(this->lock_);
-        std::queue<value_type> empty;
-        this->data_que_.swap(empty);
+        std::unique_lock un(this->lock_);
+        Channel<T>::Clear();
     }
 
     void Close() {
@@ -199,8 +151,6 @@ protected:
     void WakeUp() { this->control_ca_.notify_one(); }
 
 private:
-    std::queue<value_type> data_que_;
-
     std::mutex              lock_;
     std::condition_variable control_ca_;
     std::atomic_bool        active_{true};

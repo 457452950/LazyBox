@@ -67,8 +67,7 @@ public:
 
 } // namespace lbox
 
-#define LOG_(level, tag, ...)                                                                                          \
-    lbox::LogHelper::Commit(MAKELOGHEAD(lbox::LogLevel::L_##level, tag) __VA_OPT__(, ) __VA_ARGS__)
+#define LOG_(level, tag, ...) lbox::LogHelper::Commit(MAKELOGHEAD(lbox::LogLevel::L_##level, tag), __VA_ARGS__)
 
 #define LOG_FAT(tag, ...) LOG_(FATAL, tag, __VA_ARGS__)
 #define LOG_ERR(tag, ...) LOG_(ERROR, tag, __VA_ARGS__)

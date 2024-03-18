@@ -11,7 +11,11 @@ bool Logger::CheckTag(const std::string &tag) const {
     if(!this->config_.tags)
         return true;
 
+#if(__cplusplus > 201703L)
     return this->config_.tags->contains(tag);
+#else
+    return this->config_.tags->find(tag) != this->config_.tags->end();
+#endif
 }
 
 LogLevel Logger::Level() const { return this->config_.level; }

@@ -2,6 +2,7 @@
 #ifndef LAZYBOX_EXAMPLE_TEST_INSTANCE_HPP_
 #define LAZYBOX_EXAMPLE_TEST_INSTANCE_HPP_
 
+#include <thread>
 #include <future>
 #include <iostream>
 

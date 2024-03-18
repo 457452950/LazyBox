@@ -69,7 +69,7 @@ TCASE(Thread, WaitableActor) {
         void operator()() {
             while(wactor_active) {
                 int i = 0;
-                if(this->Get(i)) {
+                if(this->Wait2Get(i)) {
                     if(i == 0) {
                         return;
                     }
@@ -83,7 +83,7 @@ TCASE(Thread, WaitableActor) {
         void operator()(int i) {
             while(wactor_active) {
                 int ii = 0;
-                if(this->Get(ii, std::chrono::milliseconds(i)))
+                if(this->Wait2Get(ii, std::chrono::milliseconds(i)))
                     wactor_answer += ii;
                 else
                     std::this_thread::yield();

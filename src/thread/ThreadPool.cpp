@@ -1,5 +1,5 @@
 #include "lazybox/thread/ThreadPool.hpp"
-#include <cassert>
+#include "lazybox/Assert.hpp"
 
 namespace lbox {
 
@@ -48,7 +48,7 @@ void ThreadPool::checkThreadCount() {
             for(int i = 0; i < add; ++i) {
                 this->newThread();
             }
-            assert(count == this->workers_.size());
+            Assert(count == this->workers_.size(), "workers count not equal {} != {}", count, this->workers_.size());
         }
     }
 

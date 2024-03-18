@@ -5,6 +5,7 @@
 #include "test_thread_thread_pool.hpp"
 #include "test_thread_actor.hpp"
 #include "test_thread_channel.hpp"
+#include "test_thread_safe_queue.hpp"
 
 #include "lazybox/logger/Logger.hpp"
 

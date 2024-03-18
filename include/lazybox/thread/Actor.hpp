@@ -18,11 +18,13 @@ namespace lbox {
  */
 template <class T>
 class Actor : public NonCopyAble {
+protected:
     using value_type = T;
     using value_ref  = T &;
     using value_ptr  = T *;
 
 public:
+    Actor()          = default;
     virtual ~Actor() = default;
 
     /**
@@ -32,8 +34,7 @@ public:
     template <class U>
     void Send(U &&m) {
         if(this->SendingMessageFilter(m)) {
-            std::lock_guard uni{lock_};
-            msg_que_.push(std::forward<U>(m));
+            msg_que_.Push(std::forward<U>(m));
         }
     }
 
@@ -46,112 +47,23 @@ protected:
     virtual bool SendingMessageFilter(const value_type & /* v */) { return true; }
 
 protected:
-    std::size_t Size() noexcept(true) {
-        std::lock_guard uni{lock_};
-        return msg_que_.size();
-    }
+    std::size_t Size() noexcept(true) { return msg_que_.Size(); }
 
-    [[nodiscard]] bool Empty() noexcept(true) {
-        std::lock_guard uni{lock_};
-        return msg_que_.empty();
-    }
+    [[nodiscard]] bool Empty() noexcept(true) { return msg_que_.Empty(); }
 
     /**
      * non-blocking
      * @param v
      * @return 返回true时有消息，返回false时无消息
      */
-    [[nodiscard]] bool Get(value_ref v) noexcept(true) {
-        if(Empty()) {
-            return false;
-        }
+    [[nodiscard]] bool Get(value_ref v) noexcept(true) { return this->msg_que_.Pop(v); }
 
-        std::lock_guard uni{lock_};
+    value_type Get() noexcept(false) { return this->msg_que_.Pop(); }
 
-        v = std::move(msg_que_.front());
-        msg_que_.pop();
-        return true;
-    }
-
-    void Clear() noexcept(true) {
-        std::lock_guard        uni{lock_};
-        std::queue<value_type> empty;
-        this->msg_que_.swap(empty);
-    }
+    void Clear() { this->msg_que_.Clear(); }
 
 private:
-    FastLock               lock_;
-    std::queue<value_type> msg_que_;
-};
-
-/**
- * Actor模式指针版本
- * @tparam T
- */
-template <class T>
-    requires(std::is_pointer_v<T> || is_template_of_v<std::shared_ptr, T>)
-class Actor<T> : public NonCopyAble {
-    using value_type = T;
-
-public:
-    virtual ~Actor() = default;
-
-    /**
-     * non-blocking
-     * @param m
-     */
-    template <class U>
-    void Send(U &&m) {
-        if(this->SendingMessageFilter(m)) {
-            std::lock_guard uni{lock_};
-            msg_que_.push(std::forward<U>(m));
-        }
-    }
-
-    /**
-     * 数据过滤器
-     * @param v 数据
-     * @return 返回false时略过此条数据
-     */
-    [[nodiscard]] virtual bool SendingMessageFilter(const value_type & /* v */) { return true; }
-
-protected:
-    std::size_t Size() {
-        std::lock_guard uni{lock_};
-        return msg_que_.size();
-    }
-
-    [[nodiscard]] bool Empty() noexcept(true) {
-        std::lock_guard uni{lock_};
-        return msg_que_.empty();
-    }
-
-    /**
-     * non-blocking
-     * @return nullptr for empty,
-     *         otherwise return the data
-     */
-    [[nodiscard]] value_type Get() noexcept(true) {
-        std::lock_guard uni{lock_};
-
-        if(this->msg_que_.empty()) {
-            return nullptr;
-        }
-
-        auto res = std::move(msg_que_.front());
-        msg_que_.pop();
-        return res;
-    }
-
-    void Clear() noexcept(true) {
-        std::lock_guard        uni{lock_};
-        std::queue<value_type> empty;
-        this->msg_que_.swap(empty);
-    }
-
-private:
-    FastLock               lock_;
-    std::queue<value_type> msg_que_;
+    thread_safe::Queue<value_type> msg_que_;
 };
 
 /**
@@ -159,12 +71,16 @@ private:
  * @tparam T
  */
 template <class T>
-class WaitableActor : public NonCopyAble {
-    using value_type = T;
-    using value_ref  = T &;
+class WaitableActor : public Actor<T> {
+protected:
+    using value_type = typename Actor<T>::value_type;
+    using value_ref  = typename Actor<T>::value_ref;
 
 public:
-    virtual ~WaitableActor() = default;
+    WaitableActor() = default;
+    virtual ~WaitableActor(){
+            //        this->Clear();
+    };
 
     /**
      * non-blocking
@@ -172,10 +88,8 @@ public:
      */
     template <class U>
     void Send(U &&m) {
-        if(this->SendingMessageFilter(m)) {
-            msg_que_.Push(std::forward<U>(m));
-            this->WakeUp();
-        }
+        Actor<T>::Send(std::forward<U>(m));
+        this->WakeUp();
     }
 
 
@@ -187,38 +101,34 @@ public:
     [[nodiscard]] virtual bool SendingMessageFilter(const value_type & /* v */) { return true; }
 
 protected:
-    std::size_t Size() noexcept(true) {
-        std::unique_lock uni(this->control_mutex_);
-        //        return msg_que_.size();
-        return msg_que_.Size();
-    }
-
-    bool Empty() noexcept(true) {
-        std::unique_lock uni(this->control_mutex_);
-        //        return msg_que_.empty();
-        return msg_que_.Empty();
-    }
-
     /**
      * blocking
      * @param v
      * @return false for empty,
      *         true for success
      */
-    [[nodiscard]] bool Get(value_ref v) {
+    [[nodiscard]] bool Wait2Get(value_ref v) {
         {
             std::unique_lock un(this->control_mutex_);
 
-            if(this->msg_que_.Empty()) {
+            if(this->Empty()) {
                 this->control_ca_.wait(un);
             }
         }
 
-        if(this->msg_que_.Pop(v)) {
-            return true;
-        } else {
-            return false;
+        return Actor<T>::Get(v);
+    }
+
+    value_type Wait2Get() {
+        {
+            std::unique_lock un(this->control_mutex_);
+
+            if(this->Empty()) {
+                this->control_ca_.wait(un);
+            }
         }
+
+        return Actor<T>::Get();
     }
 
     /**
@@ -230,62 +140,38 @@ protected:
      * @return
      */
     template <class Rep, class Period>
-    [[nodiscard]] bool Get(value_ref v, const std::chrono::duration<Rep, Period> &rel_time) {
+    [[nodiscard]] bool Wait2Get(value_ref v, const std::chrono::duration<Rep, Period> &rel_time) {
         {
             std::unique_lock un(this->control_mutex_);
 
-            if(this->msg_que_.Empty()) {
+            if(this->Empty()) {
                 this->control_ca_.wait_for(un, rel_time);
             }
         }
 
-        if(this->msg_que_.Pop(v)) {
-            return true;
-        } else {
-            return false;
-        }
+        return Actor<T>::Get(v);
     }
 
-    /**
-     * non-blocking
-     * @param v
-     * @return 返回true时有消息，返回false时无消息
-     */
-    [[nodiscard]] bool TryGet(value_ref v) noexcept(true) {
-        //        if(Empty()) {
-        //            return false;
-        //        }
-        //
-        //        std::lock_guard uni{control_mutex_};
-        //
-        //        v = std::move(msg_que_.front());
-        //        msg_que_.pop();
-        //        return true;
+    template <class Rep, class Period>
+    value_type Wait2Get(const std::chrono::duration<Rep, Period> &rel_time) {
+        {
+            std::unique_lock un(this->control_mutex_);
 
-        if(this->msg_que_.Pop(v)) {
-            return true;
-        } else {
-            return false;
+            if(this->Empty()) {
+                this->control_ca_.wait_for(un, rel_time);
+            }
         }
+
+        return Actor<T>::Get();
     }
+
 
     /**
      * wake up the actor
      */
     void WakeUp() { this->control_ca_.notify_one(); }
 
-    void Clear() noexcept(true) {
-        std::lock_guard uni{control_mutex_};
-        //        std::queue<value_type> empty;
-        //        this->msg_que_.swap(empty);
-
-        msg_que_.Clear();
-    }
-
 private:
-    //    std::queue<value_type> msg_que_;
-    typename thread_safe::Queue<value_type> msg_que_;
-
     std::mutex              control_mutex_;
     std::condition_variable control_ca_;
 };
