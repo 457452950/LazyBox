@@ -5,7 +5,8 @@
 #include "TestEngine.hpp"
 #include "TestAction.hpp"
 #include "TestCase.hpp"
-#include "../toy/DEFER.hpp"
+#include "lazybox/toy/DEFER.hpp"
+#include "lazybox/fmt/Format.h"
 
 #define TCASE(CASE_NAME, PART_NAME)                                                                                    \
     namespace {                                                                                                        \
@@ -31,9 +32,9 @@
         return;                                                                                                        \
     }
 
-#define TASSERT(EXPECTED, message)                                                                                     \
+#define TASSERT(EXPECTED, ...)                                                                                         \
     if(!(EXPECTED)) {                                                                                                  \
-        this->ext_message = message;                                                                                   \
+        this->ext_message = lbox::format(__VA_ARGS__);                                                                 \
         throw lbox::test::throw_assert{};                                                                              \
     } else {                                                                                                           \
         AddPass(true);                                                                                                 \

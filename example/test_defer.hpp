@@ -3,7 +3,6 @@
 #define LAZYBOX_EXAMPLE_TEST_DEFER_HPP_
 
 #include "lazybox/test/Test.h"
-
 #include "lazybox/toy/DEFER.hpp"
 
 TCASE(Defer, Defer) {
