@@ -61,7 +61,7 @@ public:
         queue_.emplace(std::forward<_Args>(__args)...);
     }
 
-    std::queue<Data> Clone() {
+    std::queue<Data> Dump() {
         std::lock_guard<FastLock> lock(lock_);
 
         std::queue<Data> q = this->queue_;
@@ -133,7 +133,7 @@ public:
         queue_.emplace(std::forward<_Args>(__args)...);
     }
 
-    std::queue<Data> Clone() {
+    std::queue<Data> Dump() {
         std::lock_guard<FastLock> lock(lock_);
 
         std::queue<Data> q = this->queue_;

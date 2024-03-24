@@ -23,6 +23,36 @@ TCASE(ThreadSafe, Map) {
         TASSERT(ans == 1, "ans {} not 1", ans);
         s.Remove("asdads");
     }
+    {
+        lbox::thread_safe::Map<int, int> s;
+
+        s.Add(std::pair{1, 1});
+        s.Add(std::pair{1, 2});
+        s.Add(std::pair{2, 2});
+        s.Add(std::pair{3, 3});
+        s.Add(std::pair{3, 3});
+        s.Add(std::pair{4, 4});
+
+        auto                       &&map = s.Dump();
+        std::unordered_map<int, int> ans = {{1, 1}, {2, 2}, {3, 3}, {4, 4}};
+
+        TASSERT(map == ans, "not equal");
+    }
+    {
+        lbox::thread_safe::Map<int, char> s;
+
+        s.Add(std::pair{1, 'a'});
+        s.Add(std::pair{1, 'b'});
+        s.Add(std::pair{2, 'b'});
+        s.Add(std::pair{3, 'c'});
+        s.Add(std::pair{3, 'c'});
+        s.Add(std::pair{4, 'd'});
+
+        auto                        &&map = s.Dump();
+        std::unordered_map<int, char> ans = {{1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}};
+
+        TASSERT(map == ans, "not equal");
+    }
 }
 
 #endif // LAZYBOX_EXAMPLE_TEST_THREAD_SAFE_MAP_HPP_

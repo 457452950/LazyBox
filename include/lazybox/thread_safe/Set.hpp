@@ -23,6 +23,15 @@ public:
 
     void Remove(const T &value) { getBucket(value).Remove(value); }
 
+    std::unordered_set<T> Dump() {
+        std::unordered_set<T> set;
+        for(auto &bucket : this->buckets_) {
+            auto d = bucket.Dump();
+            set.insert(d.begin(), d.end());
+        }
+        return set;
+    }
+
 private:
     auto       getIndex(const T &value) { return Hasher()(value) % bucket_count; }
     Bucket<T> &getBucket(const T &value) { return this->buckets_.at(getIndex(value)); }

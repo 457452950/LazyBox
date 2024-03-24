@@ -28,6 +28,16 @@ public:
 
     bool Get(const K &key, V &value) { return getBucket(key).Get(key, value); }
 
+    std::unordered_map<K, V> Dump() {
+        std::unordered_map<K, V> map;
+        for(auto &bucket : this->buckets_) {
+            auto d = bucket.Dump();
+            map.insert(d.begin(), d.end());
+        }
+        return map;
+    }
+
+
 private:
     auto          getIndex(const K &value) { return Hasher()(value) % bucket_count; }
     Bucket<Pair> &getBucket(const K &value) { return this->buckets_.at(getIndex(value)); }

@@ -38,6 +38,13 @@ public:
         std::erase(this->list_, value);
     }
 
+    std::vector<T> Dump() {
+        std::lock_guard<FastLock> lg{lock_};
+
+        std::vector<T> vec{list_.begin(), list_.end()};
+        return vec;
+    }
+
 private:
     FastLock             lock_;
     std::forward_list<T> list_;
@@ -80,6 +87,13 @@ public:
             return true;
         }
         return false;
+    }
+
+    std::vector<PairType> Dump() {
+        std::lock_guard<FastLock> lg{lock_};
+        
+        std::vector<PairType> vec{list_.begin(), list_.end()};
+        return vec;
     }
 
 private:
