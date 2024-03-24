@@ -12,6 +12,10 @@ public:
     NonCopyAble &operator=(const NonCopyAble &) = delete;
 };
 
+#define NON_COPYABLE(CLASS)                                                                                            \
+    CLASS(const CLASS &)            = delete;                                                                          \
+    CLASS &operator=(const CLASS &) = delete;
+
 } // namespace lbox
 
 #endif // LAZYBOX_INCLUDE_TOY_NONCOPYABLE_HPP_

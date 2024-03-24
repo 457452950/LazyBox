@@ -1,4 +1,5 @@
 #include "lazybox/test/Test.h"
+#include "lazybox/toy/NonCopyAble.hpp"
 
 #include "test_defer.hpp"
 #include "test_instance.hpp"
@@ -22,6 +23,11 @@ TPREPARE {
 TCLOSURE {
     LOG_INF("main", "test cases finished");
     lbox::Logger::GetInstance()->Stop();
+};
+
+class NonCopyAbleClass {
+public:
+    NON_COPYABLE(NonCopyAbleClass)
 };
 
 int main() {
