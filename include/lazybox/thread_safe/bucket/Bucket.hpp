@@ -26,7 +26,7 @@ public:
         std::lock_guard<FastLock> lg{lock_};
 
         auto i = std::count(this->list_.begin(), this->list_.end(), value);
-        Assert(i <= 1, "value {} count {} more than 1", value, i);
+        Assert(i <= 1);
 
         if(i == 0)
             list_.push_front(std::forward<U>(value));
@@ -91,7 +91,7 @@ public:
 
     std::vector<PairType> Dump() {
         std::lock_guard<FastLock> lg{lock_};
-        
+
         std::vector<PairType> vec{list_.begin(), list_.end()};
         return vec;
     }
