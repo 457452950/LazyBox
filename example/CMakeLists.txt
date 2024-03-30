@@ -11,6 +11,9 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,leak,undefined")
 endif ()
 
+if (MSVC)
+    add_compile_options("/Zc:preprocessor,__cplusplus" "-utf-8")
+endif ()
 
 add_executable(${PROJECT_NAME} main.cpp
         test_defer.hpp
@@ -19,4 +22,5 @@ add_executable(${PROJECT_NAME} main.cpp
         test_thread_thread_pool.hpp
         test_thread_actor.hpp
         test_thread_channel.hpp)
+target_include_directories(${PROJECT_NAME} PUBLIC "../include")
 target_link_libraries(${PROJECT_NAME} ${LIBRARY_NAME})

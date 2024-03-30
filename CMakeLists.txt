@@ -7,13 +7,11 @@ set(LIBRARY_NAME lbox)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-include_directories("include")
-
 if (MSVC)
     add_compile_options("/Zc:preprocessor,__cplusplus" "-utf-8")
 endif ()
 
-add_subdirectory(example)
+add_subdirectory(third_party/fmt_10_2_1)
 
-add_subdirectory(third_party/fmt)
 add_subdirectory(src)
+add_subdirectory(example)
