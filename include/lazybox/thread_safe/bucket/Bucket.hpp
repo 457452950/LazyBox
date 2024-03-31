@@ -35,7 +35,8 @@ public:
     void Remove(const T &value) {
         std::lock_guard<FastLock> lg{lock_};
 
-        std::erase(this->list_, value);
+        // std::erase(this->list_, value); // C++20
+        std::remove(this->list_.begin(), this->list_.end(), value);
     }
 
     std::vector<T> Dump() {

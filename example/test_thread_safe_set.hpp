@@ -40,6 +40,16 @@ TCASE(ThreadSafe, Set) {
         auto &&set = s.Dump();
         TASSERT(set == std::unordered_set<int>({1, 2, 3}), "set is not {{1, 2, 3}}");
     }
+    {
+        lbox::thread_safe::Set<int *> s;
+        s.Add(nullptr);
+        int        a = 1;
+        const int *b = nullptr;
+        s.Add(&a);
+
+        s.Remove(&a);
+        s.Remove(nullptr);
+    }
 }
 
 #endif // LAZYBOX_EXAMPLE_TEST_THREAD_SAFE_SET_HPP_
