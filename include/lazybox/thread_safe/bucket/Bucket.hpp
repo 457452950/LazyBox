@@ -3,6 +3,7 @@
 #define LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_BUCKET_BUCKET_HPP_
 
 #include <forward_list>
+#include <algorithm>
 
 #include "lazybox/thread/Lock.hpp"
 #include "lazybox/Assert.hpp"
@@ -46,6 +47,13 @@ public:
         return vec;
     }
 
+    template <class Fn>
+    void Foreach(Fn func) {
+        std::lock_guard<FastLock> lg{lock_};
+
+        std::for_each(this->list_.begin(), this->list_.end(), func);
+    }
+
 private:
     FastLock             lock_;
     std::forward_list<T> list_;
@@ -76,7 +84,12 @@ public:
     void Remove(const K &value) {
         std::lock_guard<FastLock> lg{lock_};
 
-        erase_if(this->list_, [&value](const PairType &pair) { return pair.first == value; });
+#if(__cplusplus >= 202002L)
+        std::erase_if(this->list_, [&value](const PairType &pair) { return pair.first == value; });
+#else
+        auto &it = this->Find(value).operator*();
+        std::remove(this->list_.begin(), this->list_.end(), it);
+#endif
     }
 
     bool Get(const K &key, V &value) {
@@ -97,8 +110,15 @@ public:
         return vec;
     }
 
+    template <class Fn>
+    void Foreach(Fn func) {
+        std::lock_guard<FastLock> lg{lock_};
+
+        std::for_each(this->list_.begin(), this->list_.end(), func);
+    }
+
 private:
-    std::forward_list<PairType>::iterator Find(const K &key) {
+    typename std::forward_list<PairType>::iterator Find(const K &key) {
         typename std::forward_list<PairType>::iterator it = list_.begin();
         while(it != list_.end()) {
             if(it->first == key) {

@@ -39,6 +39,9 @@ TCASE(ThreadSafe, Set) {
 
         auto &&set = s.Dump();
         TASSERT(set == std::unordered_set<int>({1, 2, 3}), "set is not {{1, 2, 3}}");
+        std::for_each(set.begin(), set.end(), [](const int &i) {});
+
+        s.Foreach([](const int &a) { printf("for each %d\n", a); });
     }
     {
         lbox::thread_safe::Set<int *> s;

@@ -52,6 +52,8 @@ TCASE(ThreadSafe, Map) {
         std::unordered_map<int, char> ans = {{1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'}};
 
         TASSERT(map == ans, "not equal");
+
+        s.Foreach([](const std::pair<int, char> p) { printf("for each pair %d %c\n", p.first, p.second); });
     }
 }
 

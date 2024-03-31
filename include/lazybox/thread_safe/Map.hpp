@@ -36,7 +36,13 @@ public:
         }
         return map;
     }
-
+    
+    template <class Fn>
+    void Foreach(Fn func) {
+        for(auto &it : buckets_) {
+            it.Foreach(func);
+        }
+    }
 
 private:
     auto          getIndex(const K &value) { return Hasher()(value) % bucket_count; }

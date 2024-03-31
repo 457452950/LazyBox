@@ -32,6 +32,13 @@ public:
         return set;
     }
 
+    template <class Fn>
+    void Foreach(Fn func) {
+        for(auto &it : buckets_) {
+            it.Foreach(func);
+        }
+    }
+
 private:
     auto       getIndex(const T &value) { return Hasher()(value) % bucket_count; }
     Bucket<T> &getBucket(const T &value) { return this->buckets_.at(getIndex(value)); }
