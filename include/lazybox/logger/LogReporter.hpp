@@ -12,10 +12,12 @@
 
 namespace lbox {
 
-class LogReporter : public NonCopyAble {
+class LogReporter {
 public:
     LogReporter()          = default;
     virtual ~LogReporter() = default;
+
+    NON_COPYABLE_(LogReporter)
 
 public:
     virtual void Commit(const LogEntry &entry) = 0;

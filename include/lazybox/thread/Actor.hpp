@@ -17,7 +17,7 @@ namespace lbox {
  * @tparam T
  */
 template <class T>
-class Actor : public NonCopyAble {
+class Actor {
 protected:
     using value_type = T;
     using value_ref  = T &;
@@ -26,6 +26,8 @@ protected:
 public:
     Actor()          = default;
     virtual ~Actor() = default;
+
+    NON_COPYABLE_(Actor)
 
     /**
      * non-blocking

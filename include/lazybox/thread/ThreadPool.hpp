@@ -18,7 +18,7 @@
 
 namespace lbox {
 
-class ThreadPool : public NonCopyAble {
+class ThreadPool {
 public:
     /* static */
     static auto DefaultThreadCount() {
@@ -26,7 +26,7 @@ public:
         return (tc < 2) ? 1 : (tc - 1);
     }
 
-    class function_wrapper : public NonCopyAble {
+    class function_wrapper {
         struct impl_base {
             virtual void call()  = 0;
             virtual ~impl_base() = default;
@@ -44,6 +44,7 @@ public:
 
     public:
         function_wrapper() = default;
+        NON_COPYABLE_(function_wrapper);
 
         template <typename F>
         function_wrapper(F &&f) : impl(std::make_unique<impl_type<F>>(std::forward<F>(f))) {}
@@ -61,10 +62,11 @@ public:
 private:
     using Task = function_wrapper;
 
-    class Worker : public NonCopyAble {
+    class Worker {
     public:
         explicit Worker(ThreadPool *pool, int index);
         virtual ~Worker();
+        NON_COPYABLE_(Worker);
 
         void Join();
         void Detach();
@@ -81,6 +83,7 @@ private:
 public:
     ThreadPool();
     virtual ~ThreadPool();
+    NON_COPYABLE_(ThreadPool);
 
     void Start(std::size_t count = 4);
     void Join();

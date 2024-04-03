@@ -19,10 +19,12 @@ namespace lbox {
 /**
  * 自旋锁
  */
-class SpinLock final : public NonCopyAble {
+class SpinLock final {
 public:
     SpinLock()  = default;
     ~SpinLock() = default;
+
+    NON_COPYABLE_(SpinLock)
 
     void Lock() {
         while(flag_.test_and_set(std::memory_order_acquire))
@@ -39,10 +41,12 @@ private:
 
 #ifdef LBOX_WIN32
 // 用户态, 可重入锁, only for win32
-class FastLock : public NonCopyAble {
+class FastLock final {
 public:
     FastLock() { InitializeCriticalSection(&cs_); }
     ~FastLock() { DeleteCriticalSection(&cs_); }
+
+    NON_COPYABLE_(FastLock)
 
     void Lock() { EnterCriticalSection(&cs_); }
     void Unlock() { LeaveCriticalSection(&cs_); }

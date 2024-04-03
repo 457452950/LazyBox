@@ -14,10 +14,12 @@ namespace lbox {
  * @tparam T 单例类
  */
 template <class T>
-class Instance : public NonCopyAble {
+class Instance {
 public:
     using ValueType    = T;
     using ValuePointer = T *;
+
+    NON_COPYABLE_(Instance);
 
 public:
     /**
@@ -39,10 +41,12 @@ protected:
  * @tparam T 单例类
  */
 template <class T>
-class GlobalInstance : public NonCopyAble {
+class GlobalInstance {
 public:
     using ValueType    = T;
     using ValuePointer = T *;
+
+    NON_COPYABLE_(GlobalInstance);
 
 public:
     template <class... Types>
@@ -100,10 +104,12 @@ inline FastLock GlobalInstance<T>::lock_;
  * @tparam T
  */
 template <class T>
-class ThreadInstance : public NonCopyAble {
+class ThreadInstance {
 public:
     using ValueType    = T;
     using ValuePointer = T *;
+
+    NON_COPYABLE_(ThreadInstance);
 
 public:
     template <class... Types>

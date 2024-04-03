@@ -12,7 +12,7 @@ public:
     NonCopyAble &operator=(const NonCopyAble &) = delete;
 };
 
-#define NON_COPYABLE(CLASS)                                                                                            \
+#define NON_COPYABLE_(CLASS)                                                                                           \
     CLASS(const CLASS &)            = delete;                                                                          \
     CLASS &operator=(const CLASS &) = delete;
 

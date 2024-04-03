@@ -9,12 +9,14 @@
 namespace lbox::thread_safe {
 
 template <class T>
-class Queue : public NonCopyAble {
+class Queue {
     using Data = T;
 
 public:
     Queue()  = default;
     ~Queue() = default;
+
+    NON_COPYABLE_(Queue)
 
     template <class U>
     void Push(U &&value) {
@@ -81,12 +83,14 @@ private:
 
 
 template <class T>
-class Queue<T *> : public NonCopyAble {
+class Queue<T *> {
     using Data = T *;
 
 public:
     Queue()  = default;
     ~Queue() = default;
+
+    NON_COPYABLE_(Queue)
 
     template <class U>
     void Push(U &&value) {
@@ -153,12 +157,14 @@ private:
 
 
 template <class T>
-class Queue<std::shared_ptr<T>> : public NonCopyAble {
+class Queue<std::shared_ptr<T>> {
     using Data = std::shared_ptr<T>;
 
 public:
     Queue()  = default;
     ~Queue() = default;
+
+    NON_COPYABLE_(Queue)
 
     template <class U>
     void Push(U &&value) {
@@ -224,12 +230,14 @@ private:
 };
 
 template <class T>
-class Queue<std::unique_ptr<T>> : public NonCopyAble {
+class Queue<std::unique_ptr<T>> {
     using Data = std::unique_ptr<T>;
 
 public:
     Queue()  = default;
     ~Queue() = default;
+
+    NON_COPYABLE_(Queue)
 
     template <class U>
     void Push(U &&value) {

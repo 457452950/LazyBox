@@ -14,7 +14,7 @@ namespace lbox {
 
 
 template <class T>
-class Channel : public NonCopyAble {
+class Channel {
 public:
     using value_type = T;
     using value_ref  = T &;
@@ -22,6 +22,8 @@ public:
 public:
     Channel() { static_assert(!std::is_reference_v<T> && !std::is_array_v<T> && !std::is_const_v<T>); }
     ~Channel() = default;
+
+    NON_COPYABLE_(Channel);
 
     /**
      * non-blocking
