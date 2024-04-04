@@ -4,6 +4,8 @@
 
 #include <functional>
 
+#include "lazybox/base/DefineStrTool.h"
+
 namespace lbox {
 
 class DeferHelper {
@@ -14,9 +16,6 @@ public:
     std::function<void()> f_;
 };
 
-#define MAKEUNIQUENAME_(tag, A, B) tag##A##B
-#define MAKEUNIQUENAME(tag, A, B) MAKEUNIQUENAME_(tag, A, B)
-
 /**
  * @example
  * {                                                        \n
@@ -24,7 +23,7 @@ public:
  *      DEFER( [pint]()->void{ delete[] pint; } );          \n
  * }
  */
-#define DEFER(func) auto MAKEUNIQUENAME(_DEFER, __COUNTER__, __LINE__) = std::make_shared<lbox::DeferHelper>(func)
+#define DEFER(func) auto SPLICE3(_DEFER, __COUNTER__, __LINE__) = std::make_shared<lbox::DeferHelper>(func)
 
 } // namespace lbox
 

@@ -6,9 +6,14 @@
 
 #include "lazybox/thread_safe/Set.hpp"
 #include "lazybox/test/Test.h"
+#include "lazybox/Chrono.h"
 
 TCASE(ThreadSafe, Set) {
+    COST_COUNTER("thread-safe set");
+
     {
+        FUNC_COST_COUNTER();
+
         lbox::thread_safe::Set<std::string> s;
 
         std::string a = "asdads";

@@ -42,19 +42,19 @@
 
 #define TPREPARE                                                                                                       \
     namespace {                                                                                                        \
-    class MAKEUNIQUENAME(_TPREPARE, _, __LINE__) : public lbox::test::PreAction {                                      \
+    class SPLICE3(_TPREPARE, _, __LINE__) : public lbox::test::PreAction {                                             \
         void Do() override;                                                                                            \
-    } MAKEUNIQUENAME(_TPREPARE, __COUNTER__, __LINE__);                                                                \
+    } SPLICE3(_TPREPARE, __COUNTER__, __LINE__);                                                                       \
     }                                                                                                                  \
-    void MAKEUNIQUENAME(_TPREPARE, _, __LINE__)::Do()
+    void SPLICE3(_TPREPARE, _, __LINE__)::Do()
 
 #define TCLOSURE                                                                                                       \
     namespace {                                                                                                        \
-    class MAKEUNIQUENAME(_TCLOSURE, _, __LINE__) : public lbox::test::EndAction {                                      \
+    class SPLICE3(_TCLOSURE, _, __LINE__) : public lbox::test::EndAction {                                             \
         void Do() override;                                                                                            \
-    } MAKEUNIQUENAME(_TCLOSURE, __COUNTER__, __LINE__);                                                                \
+    } SPLICE3(_TCLOSURE, __COUNTER__, __LINE__);                                                                       \
     }                                                                                                                  \
-    void MAKEUNIQUENAME(_TCLOSURE, _, __LINE__)::Do()
+    void SPLICE3(_TCLOSURE, _, __LINE__)::Do()
 
 
 // #define TEST_DEMO

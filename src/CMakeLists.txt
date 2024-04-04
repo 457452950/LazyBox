@@ -28,6 +28,8 @@ add_library(${LIBRARY_NAME}
         ${LIBRARY_THREAD_SOURCE}
         ${LIBRARY_TEST_SOURCE}
         ${LIBRARY_LOGGER_SOURCE}
+        
+        Chrono.cpp
 )
 target_include_directories(${LIBRARY_NAME} PUBLIC "../include")
 target_link_libraries(${LIBRARY_NAME} PUBLIC fmt)
