@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(${LIBRARY_NAME})
+project(${LBOX_LIBRARY_NAME})
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -24,12 +24,15 @@ set(LIBRARY_LOGGER_SOURCE
         logger/LogWriter.cpp
 )
 
-add_library(${LIBRARY_NAME}
+add_library(${LBOX_LIBRARY_NAME}
         ${LIBRARY_THREAD_SOURCE}
         ${LIBRARY_TEST_SOURCE}
         ${LIBRARY_LOGGER_SOURCE}
-        
+
         Chrono.cpp
 )
-target_include_directories(${LIBRARY_NAME} PUBLIC "../include")
-target_link_libraries(${LIBRARY_NAME} PUBLIC fmt)
+if (MSVC)
+    target_compile_options(${LBOX_LIBRARY_NAME} PUBLIC "/Zc:preprocessor,__cplusplus" "-utf-8")
+endif ()
+target_include_directories(${LBOX_LIBRARY_NAME} PUBLIC "../include")
+target_link_libraries(${LBOX_LIBRARY_NAME} PUBLIC fmt)
