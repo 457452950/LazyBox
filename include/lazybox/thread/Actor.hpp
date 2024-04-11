@@ -7,7 +7,7 @@
 
 #include "Lock.hpp"
 #include "lazybox/base/TypeTraits.hpp"
-#include "lazybox/thread_safe/Queue.hpp"
+#include "lazybox/thread/thread_safe/Queue.hpp"
 
 namespace lbox {
 

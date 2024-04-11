@@ -3,7 +3,7 @@
 #define LAZYBOX_EXAMPLE_TEST_THREAD_SAFE_MAP_HPP_
 
 #include "lazybox/test/Test.h"
-#include "lazybox/thread_safe/Map.hpp"
+#include "lazybox/thread/thread_safe/Map.hpp"
 
 TCASE(ThreadSafe, Map) {
     {

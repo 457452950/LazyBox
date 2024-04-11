@@ -1,10 +1,10 @@
 #pragma once
-#ifndef LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_QUEUE_HPP_
-#define LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_QUEUE_HPP_
+#ifndef LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_QUEUE_HPP_
+#define LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_QUEUE_HPP_
 
 #include <queue>
 
-#include "../thread/Lock.hpp"
+#include "lazybox/thread/Lock.hpp"
 
 namespace lbox::thread_safe {
 
@@ -304,4 +304,4 @@ private:
 
 } // namespace lbox::thread_safe
 
-#endif // LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_QUEUE_HPP_
+#endif // LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_QUEUE_HPP_

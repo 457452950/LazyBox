@@ -1,11 +1,11 @@
 ﻿#pragma once
-#ifndef LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_MAP_HPP_
-#define LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_MAP_HPP_
+#ifndef LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_MAP_HPP_
+#define LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_MAP_HPP_
 
 #include <unordered_map>
 #include <utility>
 
-#include "bucket/Bucket.hpp"
+#include "lazybox/thread/thread_safe/bucket/Bucket.hpp"
 
 namespace lbox::thread_safe {
 
@@ -36,7 +36,7 @@ public:
         }
         return map;
     }
-    
+
     template <class Fn>
     void Foreach(Fn func) {
         for(auto &it : buckets_) {
@@ -55,4 +55,4 @@ private:
 
 } // namespace lbox::thread_safe
 
-#endif // LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_MAP_HPP_
+#endif // LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_MAP_HPP_

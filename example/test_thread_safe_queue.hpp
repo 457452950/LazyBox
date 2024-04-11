@@ -3,7 +3,7 @@
 #define LAZYBOX_EXAMPLE_TEST_THREAD_SAFE_QUEUE_HPP_
 
 #include "lazybox/test/Test.h"
-#include "lazybox/thread_safe/Queue.hpp"
+#include "lazybox/thread/thread_safe/Queue.hpp"
 
 template <class T>
 using Queue = lbox::thread_safe::Queue<T>;

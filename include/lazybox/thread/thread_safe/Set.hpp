@@ -1,10 +1,10 @@
 ﻿#pragma once
-#ifndef LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_SET_HPP_
-#define LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_SET_HPP_
+#ifndef LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_SET_HPP_
+#define LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_SET_HPP_
 
 #include <unordered_set>
 
-#include "bucket/Bucket.hpp"
+#include "lazybox/thread/thread_safe/bucket/Bucket.hpp"
 
 namespace lbox::thread_safe {
 
@@ -49,4 +49,4 @@ private:
 
 } // namespace lbox::thread_safe
 
-#endif // LAZYBOX_INCLUDE_LAZYBOX_THREAD_SAFE_SET_HPP_
+#endif // LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_SET_HPP_

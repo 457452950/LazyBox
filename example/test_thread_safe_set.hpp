@@ -4,7 +4,7 @@
 
 #include <unordered_set>
 
-#include "lazybox/thread_safe/Set.hpp"
+#include "lazybox/thread/thread_safe/Set.hpp"
 #include "lazybox/test/Test.h"
 #include "lazybox/Chrono.h"
 

@@ -7,7 +7,7 @@
 #include <filesystem>
 
 #include "lazybox/logger/Basic.hpp"
-#include "lazybox/thread_safe/Queue.hpp"
+#include "lazybox/thread/thread_safe/Queue.hpp"
 #include "lazybox/thread/Actor.hpp"
 
 namespace lbox {
