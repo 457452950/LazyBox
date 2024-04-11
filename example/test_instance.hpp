@@ -68,6 +68,7 @@ TCASE(Instance, Instance) {
     }
 
     std::for_each(answer.begin(), answer.end(), [&](A *a) { TASSERT(answer[0] == a, "Addresses should be the same"); });
+    AA::Destroy();
 }
 
 #endif // LAZYBOX_EXAMPLE_TEST_INSTANCE_HPP_

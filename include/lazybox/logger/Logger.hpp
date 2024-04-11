@@ -53,7 +53,7 @@ public:
         auto log = Logger::GetInstance();
         auto tag = to_string(head.tag);
 
-        if(!log->active_.load(std::memory_order_acquire)) {
+        if(!log || !log->active_.load(std::memory_order_acquire)) {
             return;
         }
 

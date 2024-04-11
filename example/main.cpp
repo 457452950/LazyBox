@@ -23,6 +23,7 @@ TPREPARE {
 TCLOSURE {
     LOG_INF("main", "test cases finished");
     lbox::Logger::GetInstance()->Stop();
+    lbox::Logger::Destroy();
 };
 
 class NonCopyAbleClass {
@@ -32,5 +33,6 @@ public:
 
 int main() {
     lbox::test::TestEngine::GetInstance()->RunAllTest();
+    lbox::test::TestEngine::Destroy();
     return 0;
 }

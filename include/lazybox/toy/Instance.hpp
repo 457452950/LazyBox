@@ -27,13 +27,27 @@ public:
      * @return
      */
     static ValuePointer GetInstance() {
-        static ValueType instance;
-        return std::addressof(instance);
+        static ValuePointer instance = Create();
+        return instance_;
+    }
+
+    static void Destroy() {
+        if(instance_) {
+            delete instance_;
+            instance_ = nullptr;
+        }
     }
 
 protected:
     Instance()  = default;
     ~Instance() = default;
+
+private:
+    static ValuePointer Create() {
+        instance_ = new ValueType;
+        return instance_;
+    }
+    inline static ValuePointer instance_{nullptr};
 };
 
 /**
