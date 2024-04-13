@@ -28,7 +28,7 @@ TCLOSURE {
 
 class NonCopyAbleClass {
 public:
-    NON_COPYABLE_(NonCopyAbleClass)
+    NON_COPYABLE_(NonCopyAbleClass);
 };
 
 int main() {

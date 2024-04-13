@@ -17,7 +17,7 @@ public:
     LogReporter()          = default;
     virtual ~LogReporter() = default;
 
-    NON_COPYABLE_(LogReporter)
+    NON_COPYABLE_(LogReporter);
 
 public:
     virtual void Commit(const LogEntry &entry) = 0;

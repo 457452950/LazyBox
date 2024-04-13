@@ -14,7 +14,7 @@ public:
 
 #define NON_COPYABLE_(CLASS)                                                                                           \
     CLASS(const CLASS &)            = delete;                                                                          \
-    CLASS &operator=(const CLASS &) = delete;
+    CLASS &operator=(const CLASS &) = delete
 
 } // namespace lbox
 

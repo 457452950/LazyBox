@@ -27,7 +27,7 @@ public:
     Actor()          = default;
     virtual ~Actor() = default;
 
-    NON_COPYABLE_(Actor)
+    NON_COPYABLE_(Actor);
 
     /**
      * non-blocking

@@ -24,7 +24,7 @@ public:
     SpinLock()  = default;
     ~SpinLock() = default;
 
-    NON_COPYABLE_(SpinLock)
+    NON_COPYABLE_(SpinLock);
 
     void Lock() {
         while(flag_.test_and_set(std::memory_order_acquire))

@@ -16,7 +16,7 @@ public:
     Queue()  = default;
     ~Queue() = default;
 
-    NON_COPYABLE_(Queue)
+    NON_COPYABLE_(Queue);
 
     template <class U>
     void Push(U &&value) {
@@ -90,7 +90,7 @@ public:
     Queue()  = default;
     ~Queue() = default;
 
-    NON_COPYABLE_(Queue)
+    NON_COPYABLE_(Queue);
 
     template <class U>
     void Push(U &&value) {
@@ -164,7 +164,7 @@ public:
     Queue()  = default;
     ~Queue() = default;
 
-    NON_COPYABLE_(Queue)
+    NON_COPYABLE_(Queue);
 
     template <class U>
     void Push(U &&value) {
@@ -237,7 +237,7 @@ public:
     Queue()  = default;
     ~Queue() = default;
 
-    NON_COPYABLE_(Queue)
+    NON_COPYABLE_(Queue);
 
     template <class U>
     void Push(U &&value) {
