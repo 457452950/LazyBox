@@ -46,7 +46,7 @@ public:
     FastLock() { InitializeCriticalSection(&cs_); }
     ~FastLock() { DeleteCriticalSection(&cs_); }
 
-    NON_COPYABLE_(FastLock)
+    NON_COPYABLE_(FastLock);
 
     void Lock() { EnterCriticalSection(&cs_); }
     void Unlock() { LeaveCriticalSection(&cs_); }

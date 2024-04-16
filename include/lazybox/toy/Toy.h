@@ -1,0 +1,7 @@
+﻿#pragma once
+#ifndef LAZYBOX_INCLUDE_LAZYBOX_TOY_TOY_H_
+#define LAZYBOX_INCLUDE_LAZYBOX_TOY_TOY_H_
+
+#define UNUSED(x) (void)(x)
+
+#endif // LAZYBOX_INCLUDE_LAZYBOX_TOY_TOY_H_

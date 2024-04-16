@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include "lazybox/thread/Lock.hpp"
+#include "Toy.h"
 #include "NonCopyAble.hpp"
 
 namespace lbox {
@@ -28,6 +29,7 @@ public:
      */
     static ValuePointer GetInstance() {
         static ValuePointer instance = Create();
+        UNUSED(instance);
         return instance_;
     }
 
