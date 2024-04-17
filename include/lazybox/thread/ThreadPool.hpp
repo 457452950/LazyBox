@@ -13,7 +13,7 @@
 
 #include "Lock.hpp"
 #include "lazybox/base/TypeTraits.hpp"
-#include "lazybox/Toy/NonCopyAble.hpp"
+#include "lazybox/toy/NonCopyAble.hpp"
 #include "lazybox/thread/thread_safe/Queue.hpp"
 
 namespace lbox {

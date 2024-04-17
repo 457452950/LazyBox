@@ -12,7 +12,7 @@
 #include <Windows.h>
 #endif
 
-#include "lazybox/Toy/NonCopyAble.hpp"
+#include "lazybox/toy/NonCopyAble.hpp"
 
 namespace lbox {
 
