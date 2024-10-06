@@ -4,8 +4,10 @@
 /lib/
 
 # cmake
+/CMakeLists.txt.user
 /CMakeFiles/
 /cmake-build-*/
+/example/cmake-*/
 
 # gcc build
 /Makefile/
