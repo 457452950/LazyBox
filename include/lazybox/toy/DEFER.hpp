@@ -3,6 +3,7 @@
 #define LAZYBOX_INCLUDE_DEFER_HPP_
 
 #include <functional>
+#include <memory>
 
 #include "lazybox/base/DefineStrTool.h"
 
