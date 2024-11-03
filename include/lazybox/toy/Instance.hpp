@@ -117,7 +117,7 @@ template <class T>
 typename std::atomic<typename GlobalInstance<T>::ValuePointer> GlobalInstance<T>::instance_ = nullptr;
 
 template <class T>
-typename FastLock GlobalInstance<T>::lock_ = {};
+FastLock GlobalInstance<T>::lock_ = FastLock();
 
 /**
  * 线程单例模式

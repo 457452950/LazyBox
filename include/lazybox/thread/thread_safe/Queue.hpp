@@ -3,6 +3,7 @@
 #define LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_QUEUE_HPP_
 
 #include <queue>
+#include <stdexcept>
 
 #include "lazybox/thread/Lock.hpp"
 
