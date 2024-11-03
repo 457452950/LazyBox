@@ -4,17 +4,20 @@
 
 #include <cassert>
 
+#include "lazybox/base/Sysinfo.h"
 #include "lazybox/base/CompileInfo.h"
 #include "lazybox/fmt/Format.h"
 
 #ifdef LBOX_DEBUG
 
+#if(__cplusplus >= 202002L)
+
+// check if the compiler supports the C++20 `__VA_OPT__()` feature
 #define PP_THIRD_ARG(a, b, c, ...) c
 #define VA_OPT_SUPPORTED_I(...) PP_THIRD_ARG(__VA_OPT__(, ), true, false, )
 #define VA_OPT_SUPPORTED VA_OPT_SUPPORTED_I(?)
-
-#if(__cplusplus >= 202002L)
 static_assert(VA_OPT_SUPPORTED);
+
 #ifdef LBOX_WIN32
 #define Assert(condition, ...)                                                                                         \
     if(!static_cast<bool>(condition)) {                                                                                \
@@ -67,14 +70,12 @@ void Assert(bool condition, const lbox::format_string<Args...> &fmt, Args... arg
 
 namespace {
 [[maybe_unused]] void _compile_check() {
-    // #if(__cplusplus >= 202002L)
     Assert(1 == 2);
     Assert(1 == 1);
     Assert(1 != 2, "1 != 2");
     Assert(1 == 2, "1 != 2");
     Assert(1 == 2, "extra {} == {}\n", 1, 2);
     Assert(1 == 2, "extra {} == {} {}\n", 1, 2, std::this_thread::get_id());
-    // #endif
 }
 } // namespace
 

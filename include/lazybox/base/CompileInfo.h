@@ -5,9 +5,9 @@
 #include <cassert>
 
 #ifdef NDEBUG
-#define LBOX_NDEBUG
+#define LBOX_NDEBUG 1
 #else
-#define LBOX_DEBUG
+#define LBOX_DEBUG 1
 #endif
 
 #endif // LAZYBOX_INCLUDE_LAZYBOX_BASE_COMPILEINFO_H_

@@ -17,7 +17,7 @@ enum LogLevel : int16_t {
     L_FATAL,
 };
 
-inline std::string_view LogLevelToString(LogLevel level) {
+inline const char *LogLevelToString(LogLevel level) {
     switch(level) {
     case L_VERBOSE:
         return "VERBOSE";

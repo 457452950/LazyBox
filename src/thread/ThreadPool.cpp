@@ -10,7 +10,7 @@ ThreadPool::~ThreadPool() = default;
 void ThreadPool::Start(std::size_t count) {
     this->thread_active_count_ = count;
     {
-        std::lock_guard lock{this->control_mutex_};
+        std::lock_guard<std::mutex> lock{this->control_mutex_};
         for(int i = 0; i < count; ++i) {
             newThread();
         }
@@ -67,7 +67,7 @@ ThreadPool::Worker::~Worker() {
 
 void ThreadPool::Worker::thread_work_handle() {
     while(pool_->active_.load(std::memory_order_relaxed)) {
-        std::unique_lock uni(pool_->control_mutex_);
+        std::unique_lock<std::mutex> uni(pool_->control_mutex_);
 
         while(pool_->active_.load(std::memory_order_relaxed) && pool_->task_que_.Empty()) {
             pool_->control_ca_.wait(uni, [this]() -> bool {

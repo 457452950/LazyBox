@@ -41,7 +41,7 @@ public:
     }
 
 protected:
-    Instance()  = default;
+     Instance() = default;
     ~Instance() = default;
 
 private:
@@ -49,8 +49,12 @@ private:
         instance_ = new ValueType;
         return instance_;
     }
-    inline static ValuePointer instance_{nullptr};
+    static ValuePointer instance_;
 };
+
+template <class T>
+typename Instance<T>::ValuePointer Instance<T>::instance_ = nullptr;
+
 
 /**
  * 单例模板，懒汉式
@@ -105,15 +109,15 @@ private:
     static FastLock                  lock_;
 
 protected:
-    GlobalInstance()  = default;
+     GlobalInstance() = default;
     ~GlobalInstance() = default;
 };
 
 template <class T>
-inline std::atomic<typename GlobalInstance<T>::ValuePointer> GlobalInstance<T>::instance_ = nullptr;
+typename std::atomic<typename GlobalInstance<T>::ValuePointer> GlobalInstance<T>::instance_ = nullptr;
 
 template <class T>
-inline FastLock GlobalInstance<T>::lock_;
+typename FastLock GlobalInstance<T>::lock_ = {};
 
 /**
  * 线程单例模式
@@ -148,12 +152,12 @@ private:
     static thread_local ValuePointer instance_;
 
 protected:
-    ThreadInstance()  = default;
+     ThreadInstance() = default;
     ~ThreadInstance() = default;
 };
 
 template <class T>
-inline thread_local typename ThreadInstance<T>::ValuePointer ThreadInstance<T>::instance_ = nullptr;
+thread_local typename ThreadInstance<T>::ValuePointer ThreadInstance<T>::instance_ = nullptr;
 
 } // namespace lbox
 

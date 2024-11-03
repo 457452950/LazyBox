@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 project(${LBOX_LIBRARY_NAME})
 
 set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 20)
 
 set(LIBRARY_THREAD_SOURCE
 

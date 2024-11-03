@@ -2,7 +2,8 @@
 
 #include "lazybox/test/TestEngine.hpp"
 
-namespace lbox::test {
+namespace lbox {
+namespace test {
 
 
 void TestCase::Run() {
@@ -42,4 +43,5 @@ void TestCase::AddPass(bool t) {
     ++total_count;
 }
 
-} // namespace lbox::test
+} // namespace test
+} // namespace lbox

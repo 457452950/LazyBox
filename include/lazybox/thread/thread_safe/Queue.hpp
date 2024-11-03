@@ -6,14 +6,15 @@
 
 #include "lazybox/thread/Lock.hpp"
 
-namespace lbox::thread_safe {
+namespace lbox {
+namespace thread_safe {
 
 template <class T>
 class Queue {
     using Data = T;
 
 public:
-    Queue()  = default;
+     Queue() = default;
     ~Queue() = default;
 
     NON_COPYABLE_(Queue);
@@ -87,7 +88,7 @@ class Queue<T *> {
     using Data = T *;
 
 public:
-    Queue()  = default;
+     Queue() = default;
     ~Queue() = default;
 
     NON_COPYABLE_(Queue);
@@ -161,7 +162,7 @@ class Queue<std::shared_ptr<T>> {
     using Data = std::shared_ptr<T>;
 
 public:
-    Queue()  = default;
+     Queue() = default;
     ~Queue() = default;
 
     NON_COPYABLE_(Queue);
@@ -234,7 +235,7 @@ class Queue<std::unique_ptr<T>> {
     using Data = std::unique_ptr<T>;
 
 public:
-    Queue()  = default;
+     Queue() = default;
     ~Queue() = default;
 
     NON_COPYABLE_(Queue);
@@ -302,6 +303,7 @@ private:
     FastLock         lock_;
 };
 
-} // namespace lbox::thread_safe
+} // namespace thread_safe
+} // namespace lbox
 
 #endif // LAZYBOX_INCLUDE_LAZYBOX_THREAD_THREAD_SAFE_QUEUE_HPP_

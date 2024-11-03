@@ -15,11 +15,15 @@ struct is_template_of<Target, Target<Args...>> {
     static constexpr bool value = true;
 };
 
+// template <template <class...> class Target, class T>
+// inline constexpr bool is_template_of_v = false;
 template <template <class...> class Target, class T>
-inline constexpr bool is_template_of_v = false;
+constexpr bool is_template_of_v = false;
 
+// template <template <class...> class Target, class... Args>
+// inline constexpr bool is_template_of_v<Target, Target<Args...>> = true;
 template <template <class...> class Target, class... Args>
-inline constexpr bool is_template_of_v<Target, Target<Args...>> = true;
+constexpr bool is_template_of_v<Target, Target<Args...>> = true;
 
 } // namespace lbox
 

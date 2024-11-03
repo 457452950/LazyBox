@@ -3,30 +3,32 @@
 #define LAZYBOX_INCLUDE_LAZYBOX_TEST_TESTACTION_HPP_
 
 
-namespace lbox::test {
+namespace lbox {
+namespace test {
 
 class TestAction {
 public:
     virtual void Do() = 0;
 
-    TestAction()          = default;
+             TestAction() = default;
     virtual ~TestAction() = default;
 };
 
 
 class PreAction : public TestAction {
 public:
-    PreAction();
+     PreAction();
     ~PreAction() override = default;
 };
 
 class EndAction : public TestAction {
 public:
-    EndAction();
+     EndAction();
     ~EndAction() override = default;
 };
 
-} // namespace lbox::test
+} // namespace test
+} // namespace lbox
 
 
 #endif // LAZYBOX_INCLUDE_LAZYBOX_TEST_TESTACTION_HPP_

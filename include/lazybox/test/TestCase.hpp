@@ -7,7 +7,8 @@
 
 #include "../Chrono.h"
 
-namespace lbox::test {
+namespace lbox {
+namespace test {
 
 
 class throw_abort : std::exception {
@@ -68,6 +69,7 @@ protected:
     explicit TestCase(const std::string &case_name, const std::string &part_name);
 };
 
-} // namespace lbox::test
+} // namespace test
+} // namespace lbox
 
 #endif // LAZYBOX_INCLUDE_LAZYBOX_TEST_TESTCASE_HPP_
