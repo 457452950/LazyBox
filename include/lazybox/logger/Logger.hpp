@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <unordered_set>
+#include <memory>
 
 #include "lazybox/fmt/Format.h"
 #include "lazybox/toy/Instance.hpp"
@@ -23,13 +24,23 @@ public:
     Logger();
     ~Logger() = default;
 
-    Logger *SetConfig(const LogConfig &config);
+    Logger* SetLevel(LogLevel lv) { level_ = lv; return this; }
 
     Logger *SetSTDLogger(bool enable = true);
     Logger *AddFileLogger(const std::filesystem::path &output_path, bool async = false);
     Logger *AddReporter(std::shared_ptr<LogReporter> reporter);
 
     Logger *SetFormmater(std::shared_ptr<LogFormatter> formatter);
+
+    Logger *InsertTagSet(std::shared_ptr<TagSet> set) {
+        if (set) {
+            if (!tags_) {
+                tags_ = std::make_shared<TagSet>();
+            }
+            tags_->insert(set->begin(), set->end());
+        }
+        return this;
+    }
 
     bool     CheckTag(const std::string &tag) const;
     LogLevel Level() const;
@@ -40,7 +51,8 @@ public:
 
 private:
     std::atomic_bool                          active_{true};
-    LogConfig                                 config_;
+    LogLevel                                  level_{L_INFO};
+    std::shared_ptr<TagSet>                   tags_;
     std::vector<std::shared_ptr<LogReporter>> loggers_;
     std::shared_ptr<LogReporter>              std_writer_{nullptr};
     std::shared_ptr<LogFormatter>             formatter_{nullptr};

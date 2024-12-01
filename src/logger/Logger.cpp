@@ -2,29 +2,24 @@
 
 namespace lbox {
 
-Logger *Logger::SetConfig(const LogConfig &config) {
-    config_ = config;
-    return this;
-}
-
 bool Logger::CheckTag(const std::string &tag) const {
-    if(!this->config_.tags)
+    if(!this->tags_)
         return true;
 
 #if(__cplusplus > 201703L)
-    return this->config_.tags->contains(tag);
+    return this->tags_->contains(tag);
 #else
-    return this->config_.tags->find(tag) != this->config_.tags->end();
+    return this->tags_->find(tag) != this->tags_->end();
 #endif
 }
 
-LogLevel Logger::Level() const { return this->config_.level; }
+LogLevel Logger::Level() const { return this->level_; }
 
 void Logger::Write(LogLevel level, const std::string &tag, const std::string &message) {
     if(!active_.load(std::memory_order_acquire)) {
         return;
     }
-    if(level < this->config_.level) {
+    if(level < this->level_) {
         return;
     }
     if(!this->CheckTag(tag)) {
