@@ -6,8 +6,16 @@ option(USE_LAZYBOX_DEMO "Build lazy box example" ON)
 set(LBOX_LIBRARY_NAME lbox)
 
 if (MSVC)
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    message("CMAKE_C_FLAGS          " "${CMAKE_C_FLAGS}")
+    message("CMAKE_C_FLAGS_DEBUG    " "${CMAKE_C_FLAGS}")
+    message("CMAKE_C_FLAGS_RELEASE  " "${CMAKE_C_FLAGS}")
+    message("CMAKE_CXX_FLAGS        " "${CMAKE_C_FLAGS}")
+    message("CMAKE_CXX_FLAGS_DEBUG  " "${CMAKE_C_FLAGS}")
+    message("CMAKE_CXX_FLAGS_RELEASE " "${CMAKE_C_FLAGS}")
+
+
+    # set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+    # set(CMAKE_CXX_FLAGS_DEBUG   "/MTd")
 endif ()
 
 # set output path

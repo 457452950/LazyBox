@@ -35,5 +35,5 @@ add_library(${LBOX_LIBRARY_NAME}
 if (MSVC)
     target_compile_options(${LBOX_LIBRARY_NAME} PUBLIC "/Zc:preprocessor,__cplusplus" "-utf-8")
 endif ()
-target_include_directories(${LBOX_LIBRARY_NAME} PUBLIC "../include")
+target_include_directories(${LBOX_LIBRARY_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(${LBOX_LIBRARY_NAME} PUBLIC fmt)
