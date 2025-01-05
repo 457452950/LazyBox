@@ -6,7 +6,7 @@
 #include <lazybox/logger/Logger.hpp>
 
 TCASE(Random, Random) {
-    lbox::RandomBox box{(unsigned)time(nullptr)};
+    lbox::RandomBox<> box{(unsigned)time(nullptr)};
     std::uniform_int_distribution<int> filter(0, 100);
     std::uniform_real_distribution<double> filter_double(0, 100);
     std::discrete_distribution<int> dist({40, 10, 10});
