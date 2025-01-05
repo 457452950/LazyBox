@@ -2,21 +2,11 @@ cmake_minimum_required(VERSION 3.22)
 project(LazyBox)
 
 option(USE_LAZYBOX_DEMO "Build lazy box example" ON)
+option(BUILD_LAZYBOX_SHARED "Build lazy box shared lib" ON)
+option(BUILD_LAZYBOX_STATIC "Build lazy box static lib" ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(LBOX_LIBRARY_NAME lbox)
-
-if (MSVC)
-    message("CMAKE_C_FLAGS          " "${CMAKE_C_FLAGS}")
-    message("CMAKE_C_FLAGS_DEBUG    " "${CMAKE_C_FLAGS}")
-    message("CMAKE_C_FLAGS_RELEASE  " "${CMAKE_C_FLAGS}")
-    message("CMAKE_CXX_FLAGS        " "${CMAKE_C_FLAGS}")
-    message("CMAKE_CXX_FLAGS_DEBUG  " "${CMAKE_C_FLAGS}")
-    message("CMAKE_CXX_FLAGS_RELEASE " "${CMAKE_C_FLAGS}")
-
-
-    # set(CMAKE_CXX_FLAGS_RELEASE "/MT")
-    # set(CMAKE_CXX_FLAGS_DEBUG   "/MTd")
-endif ()
 
 # set output path
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)

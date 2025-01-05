@@ -22,4 +22,9 @@ add_executable(${PROJECT_NAME} main.cpp
         test_thread_channel.hpp)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_include_directories(${PROJECT_NAME} PUBLIC "../include")
-target_link_libraries(${PROJECT_NAME} lbox)
+if (MSVC)
+    target_link_directories(${PROJECT_NAME} 
+    PRIVATE "../lib/Debug" 
+    PRIVATE "../lib/Release")
+endif()
+target_link_libraries(${PROJECT_NAME} lbox_static)
