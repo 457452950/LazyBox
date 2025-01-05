@@ -13,13 +13,17 @@ if (MSVC)
     add_compile_options("/Zc:preprocessor,__cplusplus" "-utf-8")
 endif ()
 
-add_executable(${PROJECT_NAME} main.cpp
+add_executable(${PROJECT_NAME} 
+        main.cpp
+        
         test_defer.hpp
         test_instance.hpp
         test_thread_safe_queue.hpp
         test_thread_thread_pool.hpp
         test_thread_actor.hpp
-        test_thread_channel.hpp)
+        test_thread_channel.hpp
+        test_random.hpp
+        )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_include_directories(${PROJECT_NAME} PUBLIC "../include")
 if (MSVC)

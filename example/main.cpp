@@ -9,7 +9,7 @@
 #include "test_thread_safe_queue.hpp"
 #include "test_thread_safe_set.hpp"
 #include "test_thread_safe_map.hpp"
-
+#include "test_random.hpp"
 
 #include "lazybox/logger/Logger.hpp"
 

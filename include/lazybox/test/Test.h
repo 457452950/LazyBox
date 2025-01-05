@@ -8,15 +8,17 @@
 #include "lazybox/toy/DEFER.hpp"
 #include "lazybox/fmt/Format.h"
 
-#define TCASE(CASE_NAME, PART_NAME)                                                                                    \
+#define CANE_NAME this->case_name
+
+#define TCASE(CASE_NAME_, PART_NAME)                                                                                    \
     namespace {                                                                                                        \
-    class TEST##CASE_NAME##PART_NAME : public lbox::test::TestCase {                                                   \
+    class TEST##CASE_NAME_##PART_NAME : public lbox::test::TestCase {                                                   \
     public:                                                                                                            \
-        TEST##CASE_NAME##PART_NAME() : TestCase(#CASE_NAME, #PART_NAME) {}                                             \
+        TEST##CASE_NAME_##PART_NAME() : TestCase(#CASE_NAME_, #PART_NAME) {}                                             \
         void TestProcess() override;                                                                                   \
-    } TEST##CASE_NAME##PART_NAME##__{};                                                                                \
+    } TEST##CASE_NAME_##PART_NAME##__{};                                                                                \
     }                                                                                                                  \
-    void TEST##CASE_NAME##PART_NAME::TestProcess()
+    void TEST##CASE_NAME_##PART_NAME::TestProcess()
 
 
 #define TTRUE(EXPECTED, message)                                                                                       \

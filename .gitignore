@@ -1,7 +1,7 @@
 /bin/
-/.idea/
 /build/
 /lib/
+*.log
 
 # cmake
 /CMakeLists.txt.user
@@ -12,5 +12,9 @@
 # gcc build
 /Makefile/
 /Makefile.*
-.vs
 out
+
+# ide
+/.idea/
+.vscode/
+.vs
