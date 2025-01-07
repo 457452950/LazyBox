@@ -45,11 +45,15 @@ static_assert(VA_OPT_SUPPORTED);
 #endif
 #else
 
-inline void Assert(bool condition) { assert(condition); }
+template <class Condition>
+inline void Assert(Condition&& condition) { assert(static_cast<bool>(condition)); }
 
-template <class... Args>
-void Assert(bool condition, const lbox::format_string<Args...> &fmt, Args... args) {
-    if(!condition) {
+template <class Pointer>
+inline void Assert(Pointer* condition) { assert((condition)); }
+
+template <class Condition, class... Args>
+void Assert(Condition&& condition, const lbox::format_string<Args...> &fmt, Args... args) {
+    if(!static_cast<bool>(condition)) {
 #ifdef LBOX_WIN32
         lbox::print(stderr, "assert : {}\n", lbox::vformat(fmt, lbox::make_format_args(args...)));
 #else
@@ -69,7 +73,14 @@ void Assert(bool condition, const lbox::format_string<Args...> &fmt, Args... arg
 #endif
 
 namespace {
-[[maybe_unused]] void _compile_check() {
+constexpr bool _compile_check() {
+    return true;
+    Assert("1 == 2");
+    Assert(1);
+    Assert(0);
+    Assert(nullptr);
+    // Assert(std::string{});
+
     Assert(1 == 2);
     Assert(1 == 1);
     Assert(1 != 2, "1 != 2");
@@ -77,6 +88,7 @@ namespace {
     Assert(1 == 2, "extra {} == {}\n", 1, 2);
     Assert(1 == 2, "extra {} == {} {}\n", 1, 2, std::this_thread::get_id());
 }
+static_assert(_compile_check(), "Assert template fail");
 } // namespace
 
 #endif // LAZYBOX_INCLUDE_LAZYBOX_ASSERT_HPP_
