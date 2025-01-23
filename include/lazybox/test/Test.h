@@ -10,13 +10,13 @@
 
 #define CANE_NAME this->case_name
 
-#define TCASE(CASE_NAME_, PART_NAME)                                                                                    \
+#define TCASE(CASE_NAME_, PART_NAME)                                                                                   \
     namespace {                                                                                                        \
-    class TEST##CASE_NAME_##PART_NAME : public lbox::test::TestCase {                                                   \
+    class TEST##CASE_NAME_##PART_NAME : public lbox::test::TestCase {                                                  \
     public:                                                                                                            \
-        TEST##CASE_NAME_##PART_NAME() : TestCase(#CASE_NAME_, #PART_NAME) {}                                             \
+        TEST##CASE_NAME_##PART_NAME() : TestCase(#CASE_NAME_, #PART_NAME) {}                                           \
         void TestProcess() override;                                                                                   \
-    } TEST##CASE_NAME_##PART_NAME##__{};                                                                                \
+    } TEST##CASE_NAME_##PART_NAME##__{};                                                                               \
     }                                                                                                                  \
     void TEST##CASE_NAME_##PART_NAME::TestProcess()
 

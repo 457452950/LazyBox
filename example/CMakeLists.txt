@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.22)
 project(example)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall")
 
 if (UNIX)
     message("open gcc warning")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wextra -Wpedantic")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wpedantic")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,leak,undefined")
 endif ()
 
 if (MSVC)
-    add_compile_options("/Zc:preprocessor,__cplusplus" "-utf-8")
+    add_compile_options("/Zc:preprocessor,__cplusplus" "-utf-8" "/W3")
 endif ()
 
 add_executable(${PROJECT_NAME} 

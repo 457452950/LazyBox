@@ -37,7 +37,7 @@ public:
         std::lock_guard<FastLock> lg{lock_};
 
         // std::erase(this->list_, value); // C++20
-        std::remove(this->list_.begin(), this->list_.end(), value);
+        std::ignore = std::remove(this->list_.begin(), this->list_.end(), value);
     }
 
     std::vector<T> Dump() {
@@ -88,7 +88,7 @@ public:
         std::erase_if(this->list_, [&value](const PairType &pair) { return pair.first == value; });
 #else
         auto &it = this->Find(value).operator*();
-        std::remove(this->list_.begin(), this->list_.end(), it);
+        std::ignore = std::remove(this->list_.begin(), this->list_.end(), it);
 #endif
     }
 

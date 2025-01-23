@@ -4,9 +4,9 @@
 
 #include <cassert>
 
-#include "lazybox/base/Sysinfo.h"
-#include "lazybox/base/CompileInfo.h"
-#include "lazybox/fmt/Format.h"
+#include "base/Sysinfo.h"
+#include "base/CompileInfo.h"
+#include "fmt/Format.h"
 
 #ifdef LBOX_DEBUG
 
